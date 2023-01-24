@@ -24,7 +24,7 @@
 <meta property="og:description" content="预备知识  Standard predefined identifier: 预定义标识符   __func__: 返回所在函数闭包对应的函数名. 本质上是常量字符数组, 由编译器提供(ISO C99 &amp; ISO C++11), 格式: const char __func__[]   Standard predefined macro: 预定义宏 MSVC supports the pred">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-22T20:26:46.000Z">
-<meta property="article:modified_time" content="2023-01-24T05:32:33.937Z">
+<meta property="article:modified_time" content="2023-01-24T06:11:20.377Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -397,14 +397,13 @@
                         <font size=2 color=steelblue>constexpr&ensp;auto</font><font size=2 color=lemonchiffon>&ensp;make_sequence_impl</font><font size=2 color=silver>(std::</font><font size=2 color=mediumseagreen>index_sequence</font><font size=2 color=silver><</font><font size=2 color=gainsboro>sequence</font><font size=2 color=silver>...>&ensp;seq)&ensp;{</font>
                     </b></li>
                     <li><b>
-                        <font size=2 color=mediumorchid>&emsp;&emsp;&ensp;return</font><font size=2 color=silver>&ensp;std::</font><font size=2 color=mediumseagreen>integer_sequence</font><font size=2 color=silver><</font><font size=2 color=steelblue>int</font><font size=2 color=silver>,&ensp;(</font><font size=2 color=gainsboro>&ensp;sequence&ensp;-</font><font size=2 color=silver>&ensp;seq.</font><font size=2 color=gainsboro>size</font><font size=2 color=silver>())...,</font><font size=2 color=gainsboro>&ensp;sequence</font><font size=2 color=silver>...>();</font>
+                        <font size=2 color=mediumorchid>&emsp;&emsp;&ensp;return</font><font size=2 color=silver>&ensp;std::</font><font size=2 color=mediumseagreen>integer_sequence</font><font size=2 color=silver><</font><font size=2 color=steelblue>int</font><font size=2 color=silver>,&ensp;(</font><font size=2 color=gainsboro>sequence&ensp;-</font><font size=2 color=silver>&ensp;seq.</font><font size=2 color=gainsboro>size</font><font size=2 color=silver>())...,</font><font size=2 color=gainsboro>&ensp;sequence</font><font size=2 color=silver>...>();</font>
                     </b></li>
                     <li align="left"><b>
                         <font size=2 color=silver>}</font>
                     </b></li>                       
                     <li align="left"><b>
-                        <font size=2 color=steelblue>template</font><font size=2 color=silver>&ensp;<</font><font size=2 color=steelblue>int</font><font size=2 color=gainsboro>&ensp;boundary</font><font size=2 color=silver>></font>
-                        <font size=2 color=silver>,</font><font size=2 color=steelblue>&ensp;typename</font><font size=2 color=mediumseagreen>&ensp;indices</font><font size=2 color=silver>&ensp;=&ensp;std::</font><font size=2 color=mediumseagreen>make_index_sequence</font><font size=2 color=silver><</font><font size=2 color=gainsboro>boundary</font><font size=2 color=silver>>></font>
+                        <font size=2 color=steelblue>template</font><font size=2 color=silver>&ensp;<</font><font size=2 color=steelblue>int</font><font size=2 color=gainsboro>&ensp;boundary</font><font size=2 color=silver>,</font><font size=2 color=steelblue>&ensp;typename</font><font size=2 color=mediumseagreen>&ensp;indices</font><font size=2 color=silver>&ensp;=&ensp;std::</font><font size=2 color=mediumseagreen>make_index_sequence</font><font size=2 color=silver><</font><font size=2 color=gainsboro>boundary</font><font size=2 color=silver>>></font>
                     </b></li>
                     <li align="left"><b>
                         <font size=2 color=steelblue>constexpr&ensp;auto</font><font size=2 color=lemonchiffon>&ensp;make_sequence</font><font size=2 color=silver>()&ensp;{</font>
@@ -478,7 +477,7 @@
             <td style="background: black; border: none; width: 100vw; border-radius: 4px">
                 <ol style="margin:0;">
                     <li><b>
-                        <font size=2 color=steelblue>template</font><font size=2 color=silver>&ensp;<</font><font size=2 color=steelblue>typename</font><font size=2 color=mediumseagreen>&ensp;T</font><font size=2 color=silver>,</font><font size=2 color=steelblue>&ensp;int</font><font size=2 color=silver>...</font><font size=2 color=gainsboro>Ints</font><font size=2 color=silver>></font>
+                        <font size=2 color=steelblue>template</font><font size=2 color=silver>&ensp;<</font><font size=2 color=steelblue>typename</font><font size=2 color=mediumseagreen>&ensp;T</font><font size=2 color=silver>,</font><font size=2 color=steelblue>&ensp;int</font><font size=2 color=silver>...</font><font size=2 color=gainsboro>&ensp;Ints</font><font size=2 color=silver>></font>
                     </b></li>
                     <li><b>
                         <font size =2 color=steelblue>constexpr&ensp;auto</font><font size =2 color=lemonchiffon>&ensp;get_all_enum_names</font><font size =2 color=silver>(std::</font><font size =2 color=mediumseagreen>integer_sequence</font><font size =2 color=silver><</font><font size =2 color=steelblue>int</font><font size=2 color=silver>,</font><font size=2 color=gainsboro>&ensp;Ints</font><font size=2 color=silver>...>)&ensp;{</font>
@@ -512,6 +511,24 @@
         </tr>
     </tbody>
 </table>  
+
+<h1 id="接口封装"><a href="#接口封装" class="headerlink" title="接口封装"></a>接口封装</h1><table>
+    <tbody>
+        <tr style="border: none">
+            <td style="background: black; border: none; width: 100vw; border-radius: 4px">
+                <ol style="margin:0;">
+                    <li><b>
+                        <font size=2 color=steelblue>template</font><font size=2 color=silver>&ensp;<</font><font size=2 color=steelblue>typename</font><font size=2 color=mediumseagreen>&ensp;T</font><font size=2 color=silver>,</font><font size=2 color=steelblue>&ensp;int</font><font size=2 color=gainsboro>&ensp;boundary</font><font size=2 color=silver>></font>
+                    </b></li>
+                    <li><b>
+                        <font size=2 color=steelblue>auto</font><font size=2 color=gainsboro>&ensp;enum_names</font><font size=2 color=silver>&ensp;=</font><font size =2 color=gainsboro>&ensp;get_all_enum_names</font><font size =2 color=silver><</font><font size =2 color=mediumseagreen>T</font><font size =2 color=silver>>(</font><font size=2 color=gainsboro>make_sequence</font><font size=2 color=silver><</font><font size=2 color=gainsboro>boundary</font><font size=2 color=silver>>());</font>
+                    </b></li>
+                </ol>
+            </td>
+        </tr>
+    </tbody>
+</table>  
+
                 
               </div>
             
