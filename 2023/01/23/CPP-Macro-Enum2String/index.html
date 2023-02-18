@@ -24,7 +24,7 @@
 <meta property="og:description" content="预备知识  Standard predefined identifier: 预定义标识符   __func__: 返回所在函数闭包对应的函数名. 本质上是常量字符数组, 由编译器提供(ISO C99 &amp; ISO C++11), 格式: const char __func__[]   Standard predefined macro: 预定义宏 MSVC supports the pred">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-22T20:26:46.000Z">
-<meta property="article:modified_time" content="2023-01-24T06:11:20.377Z">
+<meta property="article:modified_time" content="2023-02-18T12:54:35.159Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -344,7 +344,7 @@
 <li><code>__FUNCSIG__</code> 是如何获得函数的完整声明?</li>
 <li>函数的声明如何能获得任意类型的 <code>enum class</code> 的相关信息?</li>
 </ul>
-<p>好的问题远比答案重要: 在编译阶段, 模板函数会对所有的枚举类型进行实例化. 而实例化过程中, 传入的枚举类型及枚举值就是我们所需要的相关信息. 本文目标是提供操作枚举(&lt;255)的工具函数, 如下:</p>
+<p>好的问题远比答案重要: 在编译阶段, 模板函数会对所有的枚举类型进行实例化. 而实例化过程中, 传入的枚举类型及枚举值就是我们所需要的相关信息. 本文目标是提供操作枚举类型的工具函数, 如下:</p>
 <ul>
 <li><code>get_enum_name</code>: 通过枚举值, 获取对应名称</li>
 <li><code>get_all_enum_names</code>: 获取枚举类型中所有值对应的名称列表</li>
