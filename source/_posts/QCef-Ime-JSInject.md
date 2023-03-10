@@ -1,11 +1,13 @@
 ---
 title: QCef-Ime-JSInject
 author: Jalen Cui
+comments: true
 commonts: true
 categories: Cef
 date: 2023-03-08 22:47:56
 tags:
 ---
+
 
 # 预备知识
 * Communications: between host and web
@@ -107,6 +109,7 @@ void XXX::setImeEnabled(bool enabled)
 # 代码实现
 两种方式可以屏蔽用户输入中文密码的问题:  
 * 屏蔽中文输入法:
+通过注入代码的形式, 绑定 `<input/>` 焦点事件. 当获取焦点时, 通过捕获 `focus` 事件的方式间接通知 host 屏蔽当前窗口对应的输入法，即: 调用 `setImeEnabled`. 当失去焦点时, 则通知 host 恢复当前窗口的输入法状态.
 ```cpp
 void YYY::injectToLogin(){
     QString jsCode = R"(
