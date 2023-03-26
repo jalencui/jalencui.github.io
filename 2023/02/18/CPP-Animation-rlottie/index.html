@@ -1,0 +1,827 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/jalen-32x32.png">
+  <link rel="icon" href="/images/favicon/jalen-32x32.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jalen Cui">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 hover, pressed 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 GIF 。下图是博主随意截取的 GIF (Sam Smith) 预备知识 Concurrency In Action: single-producer, single-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rlottie -- One platform independent animation parser">
+<meta property="og:url" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/index.html">
+<meta property="og:site_name" content="Jalen&#39;s Blog">
+<meta property="og:description" content="前言面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 hover, pressed 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 GIF 。下图是博主随意截取的 GIF (Sam Smith) 预备知识 Concurrency In Action: single-producer, single-">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/samdemo.gif">
+<meta property="article:published_time" content="2023-02-18T01:15:11.000Z">
+<meta property="article:modified_time" content="2023-03-26T09:34:31.817Z">
+<meta property="article:author" content="Jalen Cui">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/samdemo.gif">
+  
+  
+  
+  <title>rlottie -- One platform independent animation parser - Jalen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jalencui.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jalen Cui&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="rlottie -- One platform independent animation parser"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-18 09:15" pubdate>
+          February 18, 2023 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">rlottie -- One platform independent animation parser</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 <code>hover</code>, <code>pressed</code> 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 <strong>GIF</strong> 。下图是博主随意截取的 <strong>GIF</strong> (Sam Smith)<br><img src="/2023/02/18/CPP-Animation-rlottie/samdemo.gif" srcset="/img/loading.gif" lazyload></p>
+<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><ul>
+<li><p>Concurrency In Action: <strong>single-producer, single-consumer</strong></p>
+<ul>
+<li><p>Lock-free concurrent data structure: </p>
+<blockquote>
+<p>lock-free data structures rely on the use of <strong>atomic operations</strong> and the associated <strong>memory-ordering</strong> guarantees in order to ensure that data becomes <strong>visible</strong> to other threads in the <strong>correct order</strong>.  </p>
+</blockquote>
+</li>
+<li><p>Guildllines: </p>
+<blockquote>
+<ul>
+<li>use <code>std::memory_order_seq_cst</code> for prototyping </li>
+<li>use a lock-free memory reclamation scheme </li>
+<li>simplify it to the context: <ul>
+<li>only one thread calling <code>push()</code> at a time </li>
+<li>only one thread calling <code>pop()</code> at a time</li>
+</ul>
+</li>
+<li>watch out for the ABA problem</li>
+<li>identify busy-wait loops and help the other thread</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://lottiefiles.com/">Lottie</a>:</p>
+<blockquote>
+<p>A lottie is JSON-based animation file format that allows you to ship animations on any playform as easily as shipping static assets.  </p>
+</blockquote>
+<ul>
+<li><p>Parse Lottie:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a>: a bodymovin player for Qt </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Samsung/rlottie">rlottie</a>: a platform independent standalone c++ library for rendering vector based animations and art <strong>IN REALTIME</strong></li>
+</ul>
+</li>
+<li><p>Tips on rlottie:</p>
+<ul>
+<li>render mode: synchronize (<code>rendersync</code>) and asynchronzie (<code>render</code>)</li>
+<li>cache policy: load from data with corresponding <strong>key</strong> to distinguish different cache</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>客户端中使用动画的业务场景大致相同, 如下范式可供参考:  </p>
+<blockquote>
+<p>本博主负责的 AR 直播 (1080p59.94) 项目中使用过类似范式： 16.6ms 内使用最少的 cpu 时间处理 4 路输出, 而每路每帧的 1080p 图片 <code>copy</code> 耗时 3ms 左右哦.</p>
+</blockquote>
+<ul>
+<li>desigen structure:<ul>
+<li>设计 <strong>单生产单消费者</strong> 数据结构: <code>lock_free_queue</code></li>
+<li>分析业务场景并简化之，以适用于 <code>lock_free_queue</code></li>
+</ul>
+</li>
+<li>request render: <ul>
+<li>通过异步接口 <code>render()</code> 请求渲染一帧图片，并得到对应的 <code>future</code> 对象.  </li>
+<li>将 <code>future</code> 对象存至对应的 <code>lock_free_queue</code>: <code>render_queue</code></li>
+</ul>
+</li>
+<li>process request: 遍历所有 <code>render_queue</code> 中的所有 <code>future</code> 对象 (得益于良好的数据结构，业务逻辑无需锁)</li>
+</ul>
+<h1 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h1><p>本阶段就是要设计 (拿来主义) 对应的 <strong>无锁</strong> 数据结构啦, 一切从简, 就简单贴出标准的接口.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">lock_free_queue</span><br>&#123;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">node</span><br>    &#123;<br>        std::shared_ptr&lt;T&gt; data;<br>        ndoe* next;<br>        <span class="hljs-built_in">node</span>():<span class="hljs-built_in">next</span>(<span class="hljs-literal">nullptr</span>)&#123;&#125;<br>    &#125;;<br>    std::atomic&lt;ndoe*&gt; head;<br>    std::atomic&lt;node*&gt; tail;<br>    <span class="hljs-function">node* <span class="hljs-title">pop_head</span><span class="hljs-params">()</span></span>&#123;<br>        node* <span class="hljs-type">const</span> old_head = head.<span class="hljs-built_in">load</span>();<br>        <span class="hljs-keyword">if</span>(old_head == tail.<span class="hljs-built_in">load</span>()) &#123;                                     <span class="hljs-comment">// &lt;order&gt; 1</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;<br>        &#125;<br>        head.<span class="hljs-built_in">store</span>(old_head-&gt;next);<br>        <span class="hljs-keyword">return</span> old_head;<br>    &#125;<br><span class="hljs-keyword">public</span>: <br>    <span class="hljs-built_in">lock_free_queue</span>():<span class="hljs-built_in">head</span>(<span class="hljs-keyword">new</span> node), <span class="hljs-built_in">tail</span>(head.<span class="hljs-built_in">load</span>())&#123;&#125;<br>    <span class="hljs-built_in">lock_free_queue</span>(<span class="hljs-type">const</span> lock_free_queue&amp; other)=<span class="hljs-keyword">delete</span>;<br>    lock_free_queue&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> lock_free_queue&amp; other)=<span class="hljs-keyword">delete</span>;<br>    ~<span class="hljs-built_in">lock_free_queue</span>();<br><br>    <span class="hljs-function">std::shared_ptr&lt;T&gt; <span class="hljs-title">pop</span><span class="hljs-params">()</span></span>&#123;<br>        node* old_head=<span class="hljs-built_in">pop_head</span>();<br>        <span class="hljs-keyword">if</span>(!old_head) <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">shared_ptr</span>&lt;T&gt;();<br>        <span class="hljs-function">std::shared_ptr&lt;T&gt; <span class="hljs-type">const</span> <span class="hljs-title">res</span><span class="hljs-params">(old_head-&gt;data)</span></span>;                     <span class="hljs-comment">// &lt;order&gt; 2 </span><br>        <span class="hljs-keyword">delete</span> old_head;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">push</span><span class="hljs-params">(T new_value)</span></span>&#123;<br>        <span class="hljs-function">std::shared_ptr&lt;T&gt; <span class="hljs-title">new_data</span><span class="hljs-params">(std::make_shared&lt;T&gt;(new_value))</span></span>;<br>        node* p = <span class="hljs-keyword">new</span> node;                                               <span class="hljs-comment">// &lt;order&gt; 3</span><br>        node* <span class="hljs-type">const</span> old_tail = tail.<span class="hljs-built_in">load</span>();                               <span class="hljs-comment">// &lt;order&gt; 4</span><br>        old_tail-&gt;data.<span class="hljs-built_in">swap</span>(new_data);                                    <span class="hljs-comment">// &lt;order&gt; 5</span><br>        old_tail-&gt;next = p;                                               <span class="hljs-comment">// &lt;order&gt; 6</span><br>        tail.<span class="hljs-built_in">store</span>(p);                                                    <span class="hljs-comment">// &lt;order&gt; 7</span><br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>本阶段仅仅列出 <code>rlottie</code> 接口相关的内容. </p>
+<blockquote>
+<p><strong>预备知识</strong> 和 <strong>简介</strong> 是理论和实践经验的陈述. 其中涉及的异步处理框架, 需要根据项目的业务场景和采用的设计模式 (MVC, MVVM) 进行定制. </p>
+</blockquote>
+<ul>
+<li>parseLottie: <code>lottie</code> 初始化, 包括: Animation, Surface 对象的构造, 堆内存分配<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">parseLottie</span><span class="hljs-params">(std::string lottie_file)</span></span><br><span class="hljs-function"></span>&#123;<br>     <span class="hljs-comment">// load data</span><br>     <span class="hljs-keyword">auto</span> lottieData = util::<span class="hljs-built_in">loadFromFile</span>(lottie_file); <span class="hljs-comment">// load lottie.json file from lottie_file</span><br>     <span class="hljs-comment">// parse lottie and contruct `Animation`</span><br>     lottieAnimation = Animation::<span class="hljs-built_in">loadFromData</span>(lottieData, lottie_file); <span class="hljs-comment">// ****key: lottie_file****</span><br>     <span class="hljs-comment">// alloc 1 frame buffer and construct `Surface`</span><br>     <span class="hljs-type">size_t</span> bytesPerLine = cols * <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">unint32_t</span>); <span class="hljs-comment">// row bytes to iterate</span><br>     <span class="hljs-keyword">auto</span> lottieBuffer = (<span class="hljs-type">uint32_t</span>*)<span class="hljs-built_in">malloc</span>(bytesPerline * rows);<br>     lottieSurface = <span class="hljs-built_in">Surface</span>(lottieBuffer, cols, rows, bytesPerline);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>requestRender: 以 <code>lottie</code> 动画的帧率, 调用该接口完成 1 次异步渲染请求<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">requestRender</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">auto</span> future = lottieAnimation-&gt;<span class="hljs-built_in">render</span>(currentFrame, lottieSurface, <span class="hljs-literal">true</span>);<br>    currentFrame = (currentFrame + <span class="hljs-number">1</span>) % lottieAnimation-&gt;<span class="hljs-built_in">totalFrame</span>();<br>    <span class="hljs-comment">// lock-free queue</span><br>    lottieQueue-&gt;<span class="hljs-built_in">push</span>(std::<span class="hljs-built_in">make_pair</span>(key_to_index, future));<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="插件集成-–-Windows"><a href="#插件集成-–-Windows" class="headerlink" title="插件集成 – Windows"></a>插件集成 – Windows</h1><ul>
+<li><strong>Build rlottie</strong><ul>
+<li>Install <a target="_blank" rel="noopener" href="https://gnuwin32.sourceforge.net/packages/make.htm">make</a> on Windows: in case of <code>command not found</code> on <code>make -j 2</code></li>
+<li>Build libs for Windows: no need to flow <a target="_blank" rel="noopener" href="https://github.com/Samsung/rlottie">rlottie</a><ul>
+<li>step 1: <code>cmake ..</code> produces Visual Studio Solution (default on Windows)</li>
+<li>step 2: open <em>rlottie.sln</em> and build it with Visual Studio</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Integrate rlottie</strong><ul>
+<li><p>Header Files:</p>
+<ul>
+<li>Visual Studio: setup <em>Additional Include Directories</em></li>
+<li>CMakeLists  <table style="margin-bottom: 8px">
+  <tbody>
+  <tr style="border: none">
+      <td style="background: black; border: none; width: 100vw; border-radius: 4px">
+          <ol style="margin:0">
+              <li align="left"><b>
+                  <font size=2 color=steelblue>include_directories</font><font size=2 color=silver>&ensp;(</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=mediumseagreen>&emsp;&emsp;${CMAKE_SOURCE_DIR}</font><font size=2 color=silver>/rlottie/</font><font size=2 color=skyblue>include</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=silver>)</font>
+              </b></li>
+          </ol>
+      </td>
+  </tr>
+  </tbody>
+  </table></li>
+</ul>
+</li>
+<li><p>Libs</p>
+<ul>
+<li>Visual Studio: setup <em>Additional Dependencies</em></li>
+<li>CMakeLists  <table style="margin-bottom: 8px">
+  <tbody>
+  <tr style="border: none">
+      <td style="background: black; border: none; width: 100vw; border-radius: 4px">
+          <ol style="margin:0">
+              <li align="left"><b>
+                  <font size=2 color=steelblue>target_link_libraries</font><font size=2 color=silver>&ensp;(</font><font size=2 color=mediumseagreen>${PROJECT_NAME}</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=skyblue>PRIVATE</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=gainsboro>debug</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=mediumseagreen>${CMAKE_SOURCE_DIR}</font><font size=2 color=silver>/rlottie/sdk/debug/rlottie.lib</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=gainsboro>optimized</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=mediumseagreen>${CMAKE_SOURCE_DIR}</font><font size=2 color=silver>/rlottie/sdk/release/rlottie.lib</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=silver>)</font>
+              </b></li>
+          </ol>
+      </td>
+  </tr>
+  </tbody>
+  </table></li>
+</ul>
+</li>
+<li><p>Dlls</p>
+<ul>
+<li>Visual Studio: copy them to <em>Output Directory</em></li>
+<li>CMakeLists  <table style="margin-bottom: 8px">
+  <tbody>
+  <tr style="border: none">
+      <td style="background: black; border: none; width: 100vw; border-radius: 4px">
+          <ol style="margin:0">
+              <li align="left"><b>
+                  <font size=2 color=white>cmake_path(CONVERT</font>
+                  <font size=2 color=peru>&ensp;"</font>
+                  <font size=2 color=mediumseagreen>${CMAKE_SOURCE_DIR}</font>
+                  <font size=2 color=white>/rlottie/sdk/$<CONFIG>/*.dll TO_NATIVE_PATH_LIST rlottie_dll_path)</font>
+              </b></li>
+                  <li align="left"><b>
+                  <font size=2 color=white>cmake_path(CONVERT</font><font size=2 color=peru>&ensp;"</font><font size=2 color=mediumseagreen>${CMAKE_RUNTIME_OUTPUT_DIRECTORY}</font><font size=2 color=peru>/"</font><font size=2 color=white>&ensp;TO_NATIVE_PATH_LIST runtime_output_ path)</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=steelblue>add_custom_command</font><font size=2 color=white>(</font><font size=2 color=steelblue>TARGET</font><font size=2 color=mediumseagreen>${XXX_TARGET_NAME}</font><font size=2 color=white>&ensp;POST_BUILD</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=steelblue>&emsp;&emsp;&emsp;&emsp;COMMAND</font><font size=2 color=white>&ensp;xcopy</font><font size=2 color=peru>&ensp;"</font><font size=2 color=mediumseagreen>${rlottie_dll_path}</font><font size=2 color=peru>"&ensp;"</font><font size=2 color=mediumseagreen>${runtime_output_path}</font><font size=2 color=peru>"</font><font size=2 color=white>&ensp;/y</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=steelblue>&emsp;&emsp;&emsp;&emsp;WORKING_DIRECTORY</font><font size=2 color=mediumseagreen>${CMAKE_CURRENT_SOURCE_DIR}</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=steelblue>&emsp;&emsp;&emsp;&emsp;COMMAND</font><font size=2 color=peru>&ensp;"Copying thirdparty files"</font><font size=2 color=steelblue>&ensp;VERBATIM</font>
+              </b></li>
+              <li align="left"><b>
+                  <font size=2 color=white>&emsp;&emsp;&emsp;)</font>
+              </b></li>
+          </ol>
+      </td>
+  </tr>
+  </tbody>
+  </table></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CPP/" class="category-chain-item">CPP</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>rlottie -- One platform independent animation parser</div>
+      <div>https://jalencui.com/2023/02/18/CPP-Animation-rlottie/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jalen Cui</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 18, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/08/QCef-Ime-JSInject/" title="CEF3 Input Method -- JS injection to adjust IME behavior">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CEF3 Input Method -- JS injection to adjust IME behavior</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/23/CPP-Macro-Enum2String/" title="MSVC Compiler Prefined Macro -- 枚举(enum class)转字符串">
+                        <span class="hidden-mobile">MSVC Compiler Prefined Macro -- 枚举(enum class)转字符串</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,13 +1,14 @@
 ---
-title: rlottie -- Animation Parser on CPP Client
+title: rlottie -- One platform independent animation parser
 author: Jalen Cui
 comments: true
 categories: CPP
 date: 2023-02-18 09:15:11
 tags:
 ---
-
-
+# 前言
+面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 `hover`, `pressed` 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 __GIF__ 。下图是博主随意截取的 __GIF__ (Sam Smith)
+![](samdemo.gif)
 # 预备知识
 * Concurrency In Action: __single-producer, single-consumer__
     + Lock-free concurrent data structure: 
@@ -108,7 +109,7 @@ void parseLottie(std::string lottie_file)
      lottieSurface = Surface(lottieBuffer, cols, rows, bytesPerline);
 }
 ```
-* requestRender: 以 `lottie` 动画的帧率, 调用该接口完成异步渲染相关动作
+* requestRender: 以 `lottie` 动画的帧率, 调用该接口完成 1 次异步渲染请求
 ```cpp
 void requestRender()
 {
