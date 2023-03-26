@@ -1,5 +1,5 @@
 ---
-title: 精通 QML 系列开题
+title: 精通 QML 系列 -- 开题
 author: Jalen Cui
 comments: true
 categories: Qt
