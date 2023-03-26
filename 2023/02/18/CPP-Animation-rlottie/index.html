@@ -16,17 +16,19 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="预备知识 Concurrency In Action: single-producer, single-consumer  Lock-free concurrent data structure:   lock-free data structures rely on the use of atomic operations and the associated memory-ordering g">
+    <meta name="description" content="前言面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 hover, pressed 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 GIF 。下图是博主随意截取的 GIF (Sam Smith) 预备知识 Concurrency In Action: single-producer, single-">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rlottie -- Animation Parser on CPP Client">
 <meta property="og:url" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="预备知识 Concurrency In Action: single-producer, single-consumer  Lock-free concurrent data structure:   lock-free data structures rely on the use of atomic operations and the associated memory-ordering g">
+<meta property="og:description" content="前言面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 hover, pressed 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 GIF 。下图是博主随意截取的 GIF (Sam Smith) 预备知识 Concurrency In Action: single-producer, single-">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/samdemo.gif">
 <meta property="article:published_time" content="2023-02-18T01:15:11.000Z">
-<meta property="article:modified_time" content="2023-03-21T17:32:14.724Z">
+<meta property="article:modified_time" content="2023-03-26T08:15:56.292Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jalencui.com/2023/02/18/CPP-Animation-rlottie/samdemo.gif">
   
   
   
@@ -219,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.6k words
+          4.7k words
         
       </span>
     
@@ -230,7 +232,7 @@
         
         
         
-          39 mins
+          40 mins
         
       </span>
     
@@ -273,7 +275,8 @@
             
               <div class="markdown-body">
                 
-                <h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><ul>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>面向用户的企业级产品，UI 和交互会直接影响到用户的体验：鼠标交互可以附加 UI 的 <code>hover</code>, <code>pressed</code> 状态； 对于持续的状态 (Download, Uninstall, Update), 则可以考虑在功能入口引入 <strong>GIF</strong> 。下图是博主随意截取的 <strong>GIF</strong> (Sam Smith)<br><img src="/2023/02/18/CPP-Animation-rlottie/samdemo.gif" srcset="/img/loading.gif" lazyload></p>
+<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><ul>
 <li><p>Concurrency In Action: <strong>single-producer, single-consumer</strong></p>
 <ul>
 <li><p>Lock-free concurrent data structure: </p>
@@ -344,7 +347,7 @@
 </blockquote>
 <ul>
 <li>parseLottie: <code>lottie</code> 初始化, 包括: Animation, Surface 对象的构造, 堆内存分配<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">parseLottie</span><span class="hljs-params">(std::string lottie_file)</span></span><br><span class="hljs-function"></span>&#123;<br>     <span class="hljs-comment">// load data</span><br>     <span class="hljs-keyword">auto</span> lottieData = util::<span class="hljs-built_in">loadFromFile</span>(lottie_file); <span class="hljs-comment">// load lottie.json file from lottie_file</span><br>     <span class="hljs-comment">// parse lottie and contruct `Animation`</span><br>     lottieAnimation = Animation::<span class="hljs-built_in">loadFromData</span>(lottieData, lottie_file); <span class="hljs-comment">// ****key: lottie_file****</span><br>     <span class="hljs-comment">// alloc 1 frame buffer and construct `Surface`</span><br>     <span class="hljs-type">size_t</span> bytesPerLine = cols * <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">unint32_t</span>); <span class="hljs-comment">// row bytes to iterate</span><br>     <span class="hljs-keyword">auto</span> lottieBuffer = (<span class="hljs-type">uint32_t</span>*)<span class="hljs-built_in">malloc</span>(bytesPerline * rows);<br>     lottieSurface = <span class="hljs-built_in">Surface</span>(lottieBuffer, cols, rows, bytesPerline);<br>&#125;<br></code></pre></td></tr></table></figure></li>
-<li>requestRender: 以 <code>lottie</code> 动画的帧率, 调用该接口完成异步渲染相关动作<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">requestRender</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">auto</span> future = lottieAnimation-&gt;<span class="hljs-built_in">render</span>(currentFrame, lottieSurface, <span class="hljs-literal">true</span>);<br>    currentFrame = (currentFrame + <span class="hljs-number">1</span>) % lottieAnimation-&gt;<span class="hljs-built_in">totalFrame</span>();<br>    <span class="hljs-comment">// lock-free queue</span><br>    lottieQueue-&gt;<span class="hljs-built_in">push</span>(std::<span class="hljs-built_in">make_pair</span>(key_to_index, future));<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>requestRender: 以 <code>lottie</code> 动画的帧率, 调用该接口完成 1 次异步渲染请求<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">requestRender</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">auto</span> future = lottieAnimation-&gt;<span class="hljs-built_in">render</span>(currentFrame, lottieSurface, <span class="hljs-literal">true</span>);<br>    currentFrame = (currentFrame + <span class="hljs-number">1</span>) % lottieAnimation-&gt;<span class="hljs-built_in">totalFrame</span>();<br>    <span class="hljs-comment">// lock-free queue</span><br>    lottieQueue-&gt;<span class="hljs-built_in">push</span>(std::<span class="hljs-built_in">make_pair</span>(key_to_index, future));<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="插件集成-–-Windows"><a href="#插件集成-–-Windows" class="headerlink" title="插件集成 – Windows"></a>插件集成 – Windows</h1><ul>
 <li><strong>Build rlottie</strong><ul>
