@@ -1,5 +1,5 @@
 ---
-title: rlottie -- Animation Parser on CPP Client
+title: rlottie -- One platform independent animation parser
 author: Jalen Cui
 comments: true
 categories: CPP
