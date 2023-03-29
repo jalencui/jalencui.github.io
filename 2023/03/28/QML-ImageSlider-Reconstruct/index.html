@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/jalen-32x32.png">
+  <link rel="icon" href="/images/favicon/jalen-32x32.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jalen Cui">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景介绍项目初期，ImageSlider 组件是根据 github 开源项目魔改的，其效果自然不符合需求。在后续的重构过程中，由于各种原因导致效果仍没有解决根本问题（博主未能完全参与其中）。 如今刚好赶上好时光，那就先拿 ImageSlider 开刷。 预备知识ImageSlider 组件涉及到的知识点比较广。因此，博主把一些需要强调的非组件知识放在 预备知识 环节。 ImageProvider">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精通QML系列 -- 重构 QWidget 组件 -- ImageSlider">
+<meta property="og:url" content="https://jalencui.com/2023/03/28/QML-ImageSlider-Reconstruct/index.html">
+<meta property="og:site_name" content="Jalen&#39;s Blog">
+<meta property="og:description" content="背景介绍项目初期，ImageSlider 组件是根据 github 开源项目魔改的，其效果自然不符合需求。在后续的重构过程中，由于各种原因导致效果仍没有解决根本问题（博主未能完全参与其中）。 如今刚好赶上好时光，那就先拿 ImageSlider 开刷。 预备知识ImageSlider 组件涉及到的知识点比较广。因此，博主把一些需要强调的非组件知识放在 预备知识 环节。 ImageProvider">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jalencui.com/2023/03/28/QML-ImageSlider-Reconstruct/saodemo.gif">
+<meta property="article:published_time" content="2023-03-28T14:05:06.000Z">
+<meta property="article:modified_time" content="2023-03-29T15:49:29.328Z">
+<meta property="article:author" content="Jalen Cui">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jalencui.com/2023/03/28/QML-ImageSlider-Reconstruct/saodemo.gif">
+  
+  
+  
+  <title>精通QML系列 -- 重构 QWidget 组件 -- ImageSlider - Jalen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jalencui.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jalen Cui&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="精通QML系列 -- 重构 QWidget 组件 -- ImageSlider"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-28 22:05" pubdate>
+          March 28, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">精通QML系列 -- 重构 QWidget 组件 -- ImageSlider</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h1><p>项目初期，ImageSlider 组件是根据 github 开源项目魔改的，其效果自然不符合需求。在后续的重构过程中，由于各种原因导致效果仍没有解决根本问题（博主未能完全参与其中）。 如今刚好赶上好时光，那就先拿 ImageSlider 开刷。<br><img src="/2023/03/28/QML-ImageSlider-Reconstruct/saodemo.gif" srcset="/img/loading.gif" lazyload></p>
+<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><p><strong>ImageSlider</strong> 组件涉及到的知识点比较广。因此，博主把一些需要强调的非组件知识放在 <strong>预备知识</strong> 环节。</p>
+<h3 id="ImageProvider"><a href="#ImageProvider" class="headerlink" title="ImageProvider"></a>ImageProvider</h3><blockquote>
+<p>The QQuickImageProvider class provides an interface for supporting pixmaps and threaded image requests in QML.<br>The QQuickAsyncImageProvider class provides an interface for asynchronous control of QML image request.  </p>
+</blockquote>
+<p>有官方定义可知，该类接口用户返回所需图片。至于图片从哪里来，完全由用户重载的接口实现决定：网络图片、本地图片、自定义图片。本文不再详细讲解接口使用方法（网上一大堆）。</p>
+<h3 id="Object-Fit-Cover"><a href="#Object-Fit-Cover" class="headerlink" title="Object Fit: Cover"></a>Object Fit: Cover</h3><ul>
+<li>definitions from <strong>CSS</strong><blockquote>
+<p>The CSS object-fit property is used to specify how an <code>&lt;img&gt;</code> or <code>&lt;video&gt;</code> should be resized to fit its container.  </p>
+</blockquote>
+<ul>
+<li>fill: the image is resized to fill the given dimension. if nessary, the image will be stretched or squished to fit</li>
+<li>contain: the image keeps its aspect ratio, but is resized to fit within the given dimension</li>
+<li><strong>cover</strong> : the image keeps its aspect ratio and fills the given dimension. The image will be clipped to fit</li>
+<li>none: the image is not resized</li>
+<li>scale-down: the image is scaled down to the smallest version of non or contain</li>
+</ul>
+</li>
+<li>definitions from <strong>QML</strong><ul>
+<li>Image.Stretch: the image is scaled to fit</li>
+<li>Image.PreserveAspectFit: the image is scaled uniformly to fit without cropping</li>
+<li><strong>Image.PreserveAspectCrop</strong> : the image is scaled uniformly to fill, cropping if nessary</li>
+<li>Image.Tile：the image is duplicated horizontally and vertically</li>
+<li>Image.TileVertically: the image is stretched horizontally and tiled vertically</li>
+<li>Image.TileHorizontally: the image is stretched vertically and tiled horizontally</li>
+<li>Image.Pad: the image is not transformed</li>
+</ul>
+</li>
+<li>definitions from <strong>QWidget</strong><ul>
+<li>Qt::IgnoreAspectRatio: the size is scaled freely. the aspect ratio is not preserved.</li>
+<li>Qt::KeepAspectRatio: the size is scaled to a rectangle as large as possible inside a given rectangle, preserving the aspect ratio.</li>
+<li>Qt::KeepAspectRatioByExpanding: the size is scaled to a rectangle as small as possible outside a given rectangle, preserving the aspect ratio.</li>
+</ul>
+</li>
+</ul>
+<p>通常，设计人员具备的是 Html 相关的技术术语：这也是该小节标题 <code>Cover</code>的由来。同时考虑到本系列与 Qt 强相关，所以同时把 QWidget 和 QML 中相关定义也拿来做对比。</p>
+<h3 id="GraphicalEffects"><a href="#GraphicalEffects" class="headerlink" title="GraphicalEffects"></a>GraphicalEffects</h3><ul>
+<li>LinearGradient<blockquote>
+<p>Linear gradients interpolate colors between start and end points in Shape items. Outside these points the gradient is either padded, reflected or repeated depending on the spread type.</p>
+</blockquote>
+</li>
+<li>OpacityMask<br>与 <code>layer.effect</code> 结合，可用于控制区域的可见区域：圆角矩形、椭圆、原型等。</li>
+</ul>
+<p>由于 Qt6 不再支持 QtGraphicalEffects 相关功能。使用 Qt6 时，需导入 <code>import Qt5Compat.GraphicalEffects</code>；使用 Qt5 时，需导入 <code>import QtGraphicalEffects 1.15</code>。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>QML 预研的出发点是：解决问题, 个人能力成长。 解决问题为先，所以博主把项目中最难啃的组件 ImageSlider 放在 QML 重构系列的第一篇。需要解决问题如下：</p>
+<ul>
+<li>组件圆角问题：需要对容器施加圆角，需要用到 <strong>预备知识</strong> 中提及的 <code>OpcityMask</code> 组件</li>
+<li>圆角锯齿问题：需要考虑屏幕 dpi 的影响</li>
+<li>填充模式问题：即 <strong>预备知识</strong> 中提及的 <code>Cover</code> 模式</li>
+<li>琐碎样式问题：渐变、Indicator 等</li>
+</ul>
+<p>注：QWidget 也能解决上述问题，只是同事已经投入过多工时。赶上好时候，看看 QML 是否更好用。</p>
+<h1 id="组件拆解"><a href="#组件拆解" class="headerlink" title="组件拆解"></a>组件拆解</h1><p>根据背景介绍的 GIF 动画，可以把组件拆解为如下几个部分：</p>
+<ul>
+<li>容器圆角：全局控制整个组件外观，即：8px 圆角</li>
+<li>渐变区域：水平渐变。当鼠标移入组件内部时，两侧出现 80px 宽度的可交互区域</li>
+<li>指示器：水平居中排列。当鼠标移入时，可切换至指示器对应的画面</li>
+<li><del>图片显示：SwipeView 官方组件：提供可视化，可交互区域</del></li>
+<li>图片加载与更新： Repeater 官方组件：通过 <code>model</code> 和 <code>delegate</code> 属性绑定，实时按需更新和加载数据</li>
+</ul>
+<h1 id="功能实现："><a href="#功能实现：" class="headerlink" title="功能实现："></a>功能实现：</h1><p>本节不作描述，直接给出比较难实现的局部功能。</p>
+<ul>
+<li><p><strong>容器圆角</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">QtGraphicalEffects</span> <span class="hljs-number">1.15</span>         <span class="hljs-comment">// Qt5</span><br><span class="hljs-keyword">import</span> <span class="hljs-title class_">Qt5Compat</span>.<span class="hljs-property">GraphicalEffects</span>      <span class="hljs-comment">// Qt6</span><br><br><span class="hljs-title class_">UserComponent</span>.<span class="hljs-property">SlideView</span>&#123;               <span class="hljs-comment">// this is the user-defined ImageSlider</span><br>    <span class="hljs-attr">id</span>: slider<br><br>    <span class="hljs-title class_">Layout</span>.<span class="hljs-property">alignment</span>: ...<br>    <span class="hljs-title class_">Layout</span>.<span class="hljs-property">minimumWidth</span>: ...<br>    <span class="hljs-title class_">Layout</span>.<span class="hljs-property">minimumHeight</span>: ...<br><br>    <span class="hljs-comment">// control the rounded area</span><br>    layer.<span class="hljs-property">enabled</span>: <span class="hljs-literal">true</span><br>    layer.<span class="hljs-property">effect</span>: <span class="hljs-title class_">OpacityMask</span>&#123;<br>        <span class="hljs-attr">maskSource</span>: mask<br>    &#125;<br><br>    <span class="hljs-title class_">Rectangle</span>&#123;<br>        <span class="hljs-attr">id</span>: mask<br>        <span class="hljs-attr">width</span>: parent.<span class="hljs-property">width</span><br>        <span class="hljs-attr">height</span>: parent.<span class="hljs-property">height</span><br>        <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span><br>        <span class="hljs-attr">visible</span>: <span class="hljs-literal">false</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>侧边区域</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">QtGraphicalEffects</span> <span class="hljs-number">1.15</span>        <span class="hljs-comment">// Qt5</span><br><span class="hljs-keyword">import</span> <span class="hljs-title class_">Qt5Compat</span>.<span class="hljs-property">GraphicalEffects</span>     <span class="hljs-comment">// Qt6</span><br><br><span class="hljs-title class_">Rectangle</span>&#123;<span class="hljs-comment">// linear gradient area</span><br>    <span class="hljs-attr">id</span>: leftarea                      <br>    <span class="hljs-attr">z</span>: <span class="hljs-number">1</span>                              <span class="hljs-comment">// topest</span><br>    anchors.<span class="hljs-property">left</span>: parent.<span class="hljs-property">left</span><br>    anchors.<span class="hljs-property">verticalCenter</span>: parent.<span class="hljs-property">verticalCenter</span><br>    <span class="hljs-attr">width</span>: <span class="hljs-number">80</span>                         <span class="hljs-comment">// 80px</span><br>    <span class="hljs-title class_">LinearGradient</span>&#123;<br>        anchors.<span class="hljs-property">fill</span>: parent<br>        <span class="hljs-attr">start</span>: <span class="hljs-title class_">Qt</span>.<span class="hljs-title function_">point</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br>        <span class="hljs-attr">end</span>: <span class="hljs-title class_">Qt</span>.<span class="hljs-title function_">point</span>(parent.<span class="hljs-property">width</span>, <span class="hljs-number">0</span>)<br><br>        <span class="hljs-attr">gradient</span>: <span class="hljs-title class_">Gradient</span>&#123;<br>            <span class="hljs-title class_">GradientStop</span>&#123;<span class="hljs-attr">position</span>: <span class="hljs-number">0.0</span>; <span class="hljs-attr">color</span>: <span class="hljs-title class_">Qt</span>.<span class="hljs-title function_">rgba</span>(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0.3</span>)&#125;<br>            <span class="hljs-title class_">GradientStop</span>&#123;<span class="hljs-attr">position</span>: <span class="hljs-number">1.0</span>; <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;transparent&quot;</span>&#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure></li>
+<li><p><strong>指示器</strong>: Indicator</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">PageIndicator</span>&#123;<br>    <span class="hljs-attr">id</span>: indicator<br>    <span class="hljs-attr">count</span>: imgSwipe.<span class="hljs-property">count</span>              <span class="hljs-comment">// property binding</span><br>    <span class="hljs-attr">currentIndex</span>: imgSwipe.<span class="hljs-property">currentIndex</span><br>    <br>    anchors.<span class="hljs-property">bottom</span>: imgSwipe.<span class="hljs-property">bottom</span><br>    anchors.<span class="hljs-property">horizontalCenter</span>: parent.<span class="hljs-property">horizontalCenter</span><br><br>    <span class="hljs-attr">interactive</span>: <span class="hljs-literal">true</span><br><br>    <span class="hljs-attr">delegate</span>: <span class="hljs-title class_">Rectangle</span>&#123;<br>        <span class="hljs-attr">implicitWidth</span>: <span class="hljs-number">24</span><br>        <span class="hljs-attr">implicitHeight</span>: <span class="hljs-number">2</span><br><br>        <span class="hljs-attr">radius</span>: height / <span class="hljs-number">2</span>             <span class="hljs-comment">// notice here, max to half height</span><br>        <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;white&quot;</span><br>        <span class="hljs-attr">opacity</span>: index === indicator.<span class="hljs-property">currentIndex</span> ? <span class="hljs-number">1.0</span>: <span class="hljs-number">0.5</span><br><br>        <span class="hljs-title class_">Behavior</span> on opcity&#123;<br>            <span class="hljs-title class_">OpacityAnimator</span>&#123;<br>                <span class="hljs-attr">duration</span>: <span class="hljs-number">100</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-title class_">MouseArea</span>&#123;<br>            <span class="hljs-attr">hoverEnabled</span>: <span class="hljs-literal">true</span><br>            anchors.<span class="hljs-property">fill</span>: parent<br>            <span class="hljs-attr">onEntered</span>: &#123;<br>                ...<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>图片加载与更新</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">Repeater</span>&#123;<br>    <span class="hljs-attr">model</span>: sliderData.<span class="hljs-property">length</span>            <span class="hljs-comment">// sliderData: user-defined property expose to c++</span><br>    <span class="hljs-attr">delegate</span>: <span class="hljs-title class_">Rectangle</span>&#123;<br>        <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;transparent&quot;</span><br>        <span class="hljs-title class_">Image</span>&#123;<br>            anchors.<span class="hljs-property">fill</span>: parent<br>            <span class="hljs-attr">source</span>: <span class="hljs-string">&quot;image://netimgprovider&quot;</span> + sliderData[index]<br>            sourceSize.<span class="hljs-property">height</span>: parent.<span class="hljs-property">height</span><br>            sourceSize.<span class="hljs-property">width</span>: parent.<span class="hljs-property">width</span><br>            <span class="hljs-attr">fillMode</span>: <span class="hljs-title class_">Image</span>.<span class="hljs-property">PreserveAspectCrop</span>          <span class="hljs-comment">// Cover mode</span><br><br>            <span class="hljs-attr">cache</span>: <span class="hljs-literal">true</span><br>        &#125;<br><br>        <span class="hljs-title class_">MouseArea</span>&#123;<br>            anchors.<span class="hljs-property">fill</span>: parent<br>            <span class="hljs-attr">hoverEnabled</span>: <span class="hljs-literal">true</span><br>            <span class="hljs-attr">onExited</span>: &#123;<br>                <span class="hljs-comment">// control linear gradient area to hide</span><br>            &#125;<br>            <span class="hljs-attr">onEntered</span>:&#123;<br>                <span class="hljs-comment">// ... to show</span><br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="附记"><a href="#附记" class="headerlink" title="附记"></a>附记</h1><p>此系列文章专注于 UI 及交互实现，会忽略数据加载和处理部分的细节，如：”image:&#x2F;&#x2F;netimgprovider” 是预备知识中 <code>ImageProvider</code> 专用匹配模式。感兴趣可查看 Qt Assistant~</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Qt/" class="category-chain-item">Qt</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>精通QML系列 -- 重构 QWidget 组件 -- ImageSlider</div>
+      <div>https://jalencui.com/2023/03/28/QML-ImageSlider-Reconstruct/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jalen Cui</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 28, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/22/QML-Series-OpenTopic/" title="精通 QML 系列 -- 规划">
+                        <span class="hidden-mobile">精通 QML 系列 -- 规划</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
