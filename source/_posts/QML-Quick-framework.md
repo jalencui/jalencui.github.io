@@ -40,4 +40,3 @@ int _tmain(
 
 # 框架蓝图： 持续迭代中
 ![](qtquick_bp.png)
-# 附记
