@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）</title>
+    <link href="/2023/05/12/MultiThread-Pratice-1/"/>
+    <url>/2023/05/12/MultiThread-Pratice-1/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、项目背景"><a href="#一、项目背景" class="headerlink" title="一、项目背景"></a>一、项目背景</h1><p>大疆 (深圳) <a href="https://www.robomaster.com/"><strong>RoboMaster</strong></a> 部门主要服务于机甲大师高校系列赛，其中的 <strong>超级对抗赛</strong> 是相对比较重要的赛事。超级对抗赛举办期间，会直播各个高校之间的多兵种机器人实时对抗。博主在大疆任职期间，全权负责赛事直播项目的 Windows 桌面端开发工作：  </p><p><strong>(1) AR 后端</strong><br>AR后端充分利用 <code>Qt Designer</code> 提供的能力 (Custom Widget), 设计出一套能够快速集成各个算法模块的 <strong>标准化组件</strong> 。<br><img src="/2023/05/12/MultiThread-Pratice-1/arsystem_brief.png">  </p><p>上图是由 QT 构建的实时处理系统，可划分为两大组成部分：</p><ul><li>主框架（EXE）：为各算法模块的运作提供了一致的行为规范，包括：加载、运行、状态监测、异常捕获（不完善）</li><li>算法模块(DLL)：<strong>功能完备</strong> 的DLL，包括：<span style="color:red"><b>界面 UI</b></span>、算法处理、状态上报</li></ul><p>相信 99% 的 QT 码农看到功能完备时，会一脸懵。 碍于本文主题，组件的标准化流程会在 Qt 系列文章中介绍。本文仅对 <strong>对齐模块</strong> 中涉及到的一些并发考虑作简要介绍。</p><p><strong>(2) AR 渲染</strong><br>AR Render 是使用 Unity 游戏引擎开发的赛事直播专用软件，3D 增强现实效果直达观众（用户）。<br><img src="/2023/05/12/MultiThread-Pratice-1/arrender_brief.png"></p><p>上图是赛事直播软件的基本构成。</p><p>图中<span style="color:chocolate"><b>橙色高亮</b></span>部分不在本文讨论范围，可参考<a href="/2023/03/22/AR-FrontAndRearScene-Overview/" title="AR Overview -- 前后景处理">AR前后景概述</a>。<br>图中<span style="color:red"><b>红色高亮</b></span>部分涉及强相关的两部分内容，包括：GPU 异步纹理请求，BMD SDK 纹理接收。BMD SDK 部分不在本文的讨论范围，因此，本文仅对 GPU 异步纹理请求的一些考虑作简要介绍。</p><h1 id="二、并发细节考虑"><a href="#二、并发细节考虑" class="headerlink" title="二、并发细节考虑"></a>二、并发细节考虑</h1><p>并发实践的考虑，要么是为了达到性能指标、要么是为了将关注点分离。本文挑选上述 AR 直播系统中比较有挑战性的两个环节，展开对并发性能的一些论述。</p><p><strong>(1) 数据对齐之帧率控制</strong><br>1080p59.94 制式直播推流的帧间隔是 16.6ms。在整个数据处理链路中，某个环节需要进行数据收发，数据对齐，数据拼接等操作。</p><ul><li>数据接收：会进行 ms 级别的 copy 操作</li><li>数据对齐环节: 会存在 ms 级的等待操作; 会存在 ms 级的数据copy (1080p BGR 大约占 3ms，跟CPU 频率强相关)</li><li>数据拼接环节：会存在 ms 级别的 格式转换（uyvy to bgra）</li><li>数据发送：会存在 ms 级别的阻塞（sdk 内部 copy 耗时）</li></ul><p>上述的 wait, copy, format 操作远远超过了有限的 16.6ms 的帧间隔。为了保证稳定的 16.6ms 稳定输出，可以将数据处理划分为两个阶段：  </p><ul><li>阶段1：负责数据接收，数据对齐相关工作</li><li>阶段2：在发送环节，再进行相应的数据拼接操作</li></ul><p>对整个实时系统来说，时延是最不可接受的。为了稳帧率，将单个阶段划分为两个阶段：不仅增加了线程间同步的负担，还需要一定的 buffer 作为缓冲，以减少帧率波动。调整后的数据处理流程，如下图所示：<br><img src="/2023/05/12/MultiThread-Pratice-1/arsystem_aligndata.png"></p><p><strong>(2) GPU 图像获取之帧率控制</strong><br>直播项目的应用场景涉及到的软硬件条件：Unity 渲染引擎、C++ SDK、BMD 采集卡。但本小节的前半部分不拘泥于特定的渲染引擎 (Unity， UE)，特定的推流方案。我们只讨论并发相关的技术细节：GPU Request，Memory location</p><ul><li>Method 1：同步操作 + 同步操作<ul><li>Step 1: [Update]同步操作获取 GPU 纹理</li><li>Step 2: [Update]将纹理数据 copy 至 SDK 内所维护的 <strong>数据结构</strong></li></ul></li><li>Method 2: 异步操作 + 同步操作<ul><li>Step 1: [Update]异步获取 GPU 纹理（AsyncGPUReadback::Request），数据结构 frameQueue 维护纹理句柄；</li><li>Step 2: [Update]遍历 frameQueue, 将所有就绪状态的纹理数据 Copy 至 SDK 内部 <strong>数据结构</strong></li></ul></li><li><span style="color:red"><b>Method 3: 异步操作 + 异步操作</b></span><ul><li>Step 1: [Update]异步获取 GPU 纹理，frameQueue 维护异步纹理</li><li>Step 2: [Update]遍历 frameQueue, 将所有就绪状态的纹理 <strong>句柄</strong> 传至 SDK 内部 <strong>无锁数据结构</strong></li><li>Step 3: [WaitForEndOfFrame]同步 SDK 内纹理句柄的无效状态，以告知 SDK 丢弃 <strong>未及时处理</strong> 的纹理句柄</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>QWidget Memoirs -- QSS related</title>
     <link href="/2023/04/25/QWidget-QSS-Overview/"/>
     <url>/2023/04/25/QWidget-QSS-Overview/</url>
