@@ -18,19 +18,19 @@
   
     <meta name="description" content="前言经过博主近期一个月在 QML &amp; Quick 方面的预研，部门线上产品已经可以看到 QML 相关内容。现阶段，组内正在使用 QML 开发 IM 需求。组内技术栈转型是个很大挑战。所以，决定这么做是有前提的：  对于博主来说，常规业务开发涉及的 QWidget 相关技术已没有任何挑战性； 对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 8">
 <meta property="og:type" content="article">
-<meta property="og:title" content="QWidget Memoirs -- QSS related">
+<meta property="og:title" content="QWidget 系列 -- QSS (持续更新)">
 <meta property="og:url" content="https://jalencui.com/2023/04/25/QWidget-QSS-Overview/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
 <meta property="og:description" content="前言经过博主近期一个月在 QML &amp; Quick 方面的预研，部门线上产品已经可以看到 QML 相关内容。现阶段，组内正在使用 QML 开发 IM 需求。组内技术栈转型是个很大挑战。所以，决定这么做是有前提的：  对于博主来说，常规业务开发涉及的 QWidget 相关技术已没有任何挑战性； 对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 8">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-25T14:15:22.000Z">
-<meta property="article:modified_time" content="2023-04-25T16:21:05.113Z">
+<meta property="article:modified_time" content="2023-08-05T00:04:50.531Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>QWidget Memoirs -- QSS related - Jalen&#39;s Blog</title>
+  <title>QWidget 系列 -- QSS (持续更新) - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="QWidget Memoirs -- QSS related"></span>
+            <span id="subtitle" data-typed-text="QWidget 系列 -- QSS (持续更新)"></span>
           
         </div>
 
@@ -268,7 +268,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">QWidget Memoirs -- QSS related</h1>
+            <h1 style="display: none">QWidget 系列 -- QSS (持续更新)</h1>
             
             
               <div class="markdown-body">
@@ -279,7 +279,7 @@
 <li>对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 80%（低代码量更低，效果更好）。</li>
 <li>组内成员对 <code>QWidget</code> 掌握程度没那么高，比如：<strong>QSS</strong> 。</li>
 </ul>
-<h1 id="前言-1"><a href="#前言-1" class="headerlink" title="前言"></a>前言</h1><p>QSS 就是 QWidget 会用到的样式表。只有 QWidget 会用到 QSS 。QML 是脚本语言啦，它依赖 Quick 提供的可视化组件。而 Item 系列的可视化组件是 JSEngine 负责渲染的。所以，QWidget 和 QuickItem 是属于两个完全不想干的领域（QObject 是唯一共性）。<br>以博主对 QSS 的认识，其大致可分为：</p>
+<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><p>QSS 就是 QWidget 会用到的样式表。只有 QWidget 会用到 QSS 。QML 是脚本语言啦，它依赖 Quick 提供的可视化组件。而 Item 系列的可视化组件是 JSEngine 负责渲染的。所以，QWidget 和 QuickItem 是属于两个完全不想干的领域（QObject 是唯一共性）。<br>以博主对 QSS 的认识，其大致可分为：</p>
 <ul>
 <li>CSS 部分: 仅限 2.0 版本。QSS 处于维护状态，应该永远支持不了 CSS3 了；</li>
 <li>Subcontrol 部分：QWidget 独有，也是本文介绍的重点;</li>
@@ -357,7 +357,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>QWidget Memoirs -- QSS related</div>
+      <div>QWidget 系列 -- QSS (持续更新)</div>
       <div>https://jalencui.com/2023/04/25/QWidget-QSS-Overview/</div>
     </div>
     <div class="license-meta">
