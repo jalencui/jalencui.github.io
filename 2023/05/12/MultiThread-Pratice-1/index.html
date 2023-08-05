@@ -287,7 +287,7 @@
 <p>相信 99% 的 QT 码农看到功能完备时，会一脸懵。 碍于本文主题，组件的标准化流程会在 Qt 系列文章中介绍。本文仅对 <strong>对齐模块</strong> 中涉及到的一些并发考虑作简要介绍。</p>
 <p><strong>(2) AR 渲染</strong><br>AR Render 是使用 Unity 游戏引擎开发的赛事直播专用软件，3D 增强现实效果直达观众（用户）。<br><img src="/2023/05/12/MultiThread-Pratice-1/arrender_brief.png" srcset="/img/loading.gif" lazyload></p>
 <p>上图是赛事直播软件的基本构成。</p>
-<p>图中<span style="color:chocolate"><b>橙色高亮</b></span>部分不在本文讨论范围，可参考<a href="/2023/03/22/AR-FrontAndRearScene-Overview/" title="AR Overview -- 前后景处理">AR前后景概述</a>。<br>图中<span style="color:red"><b>红色高亮</b></span>部分涉及强相关的两部分内容，包括：GPU 异步纹理请求，BMD SDK 纹理接收。BMD SDK 部分不在本文的讨论范围，因此，本文仅对 GPU 异步纹理请求的一些考虑作简要介绍。</p>
+<p>图中<span style="color:chocolate"><b>橙色高亮</b></span>部分不在本文讨论范围，可参考<a href="/2023/03/22/AR-FrontAndRearScene-Overview/" title="[杂项] AR -- 前后景处理">AR前后景概述</a>。<br>图中<span style="color:red"><b>红色高亮</b></span>部分涉及强相关的两部分内容，包括：GPU 异步纹理请求，BMD SDK 纹理接收。BMD SDK 部分不在本文的讨论范围，因此，本文仅对 GPU 异步纹理请求的一些考虑作简要介绍。</p>
 <h1 id="二、并发细节考虑"><a href="#二、并发细节考虑" class="headerlink" title="二、并发细节考虑"></a>二、并发细节考虑</h1><p>并发实践的考虑，要么是为了达到性能指标、要么是为了将关注点分离。本文挑选上述 AR 直播系统中比较有挑战性的两个环节，展开对并发性能的一些论述。</p>
 <p><strong>(1) 数据对齐之帧率控制</strong><br>1080p59.94 制式直播推流的帧间隔是 16.6ms。在整个数据处理链路中，某个环节需要进行数据收发，数据对齐，数据拼接等操作。</p>
 <ul>
