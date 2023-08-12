@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>并发系列 -- 汇总（持续更新）</title>
+    <link href="/2023/08/06/MultiThread-Pratice-4/"/>
+    <url>/2023/08/06/MultiThread-Pratice-4/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>本文摘自 C++ Concurrency IN  ACTION，一本基于 C++11 标准的并发和多线程编程深度指南。内容包括 std::thread、std::mutex、和 std::async 等基础类的使用，内存模型和原子操作、基于锁和无锁数据结构的构建，以及并行算法和线程管理。同时，会在部分章节附加 Qt 提供的便利工具。</p><ul><li>基础类<br><img src="/2023/08/06/MultiThread-Pratice-4/related_interfaces.png"><br>图中涉及 C++ 标准库 和 Qt 提供的一些工具类。它们足以满足 99.9% 的应用开发需求。你见过多少呢？又对它们的应用场景了解多少？（哎，难以想象共事的多位 10 多年工龄的互联网员工竟然对线程毫无感觉。博主心好累~）</li><li><del>内存模型</del></li><li><del>数据结构</del></li><li><del>并行算法</del></li><li><del>线程管理</del></li></ul><h1 id="二、并发编程实践"><a href="#二、并发编程实践" class="headerlink" title="二、并发编程实践"></a>二、并发编程实践</h1><p>该章节会结合博主 3 年多来在前端、后端、客户端方向的粗浅经验，对 C++ 并发编程作简要汇总。</p><h2 id="1、管理线程"><a href="#1、管理线程" class="headerlink" title="1、管理线程"></a><del>1、管理线程</del></h2><h2 id="2、在线程间管理数据"><a href="#2、在线程间管理数据" class="headerlink" title="2、在线程间管理数据"></a><del>2、在线程间管理数据</del></h2><h2 id="3、同步并发操作"><a href="#3、同步并发操作" class="headerlink" title="3、同步并发操作"></a><del>3、同步并发操作</del></h2><h2 id="4、C-内存模型和原子类型操作"><a href="#4、C-内存模型和原子类型操作" class="headerlink" title="4、C++ 内存模型和原子类型操作"></a><del>4、C++ 内存模型和原子类型操作</del></h2><h2 id="5、数据结构：基于锁的并发数据结构，无锁的并发数据结构"><a href="#5、数据结构：基于锁的并发数据结构，无锁的并发数据结构" class="headerlink" title="5、数据结构：基于锁的并发数据结构，无锁的并发数据结构"></a><del>5、数据结构：基于锁的并发数据结构，无锁的并发数据结构</del></h2><h2 id="6、高级线程管理"><a href="#6、高级线程管理" class="headerlink" title="6、高级线程管理"></a><del>6、高级线程管理</del></h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）</title>
     <link href="/2023/05/12/MultiThread-Pratice-1/"/>
     <url>/2023/05/12/MultiThread-Pratice-1/</url>
