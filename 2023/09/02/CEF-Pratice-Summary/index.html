@@ -16,23 +16,21 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、前言本文摘自 C++ Concurrency IN  ACTION，一本基于 C++11 标准的并发和多线程编程深度指南。内容包括 std::thread、std::mutex、和 std::async 等基础类的使用，内存模型和原子操作、基于锁和无锁数据结构的构建，以及并行算法和线程管理。同时，会在部分章节附加 Qt 提供的便利工具。  基础类图中涉及 C++ 标准库 和 Qt 提供的一些工">
+    <meta name="description" content="前言恰逢首次半年绩效考核(最高绩效 + 项目特别奖金)，博主颇有感慨。就输出一些技术相关的汇总, 比如：Cef。  20 年 7 月，博主应届入职大疆。那时起(7 Months)，博主首次接触 Web 相关开发：Electron &amp; VueJS 桌面客户端。 22 年 11 月底，博主入职新公司，并再次接触 Web 相关的开发：Qt &amp; QCefView 桌面客户端。  正文汇总主">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发系列 -- 汇总（持续更新）">
-<meta property="og:url" content="https://jalencui.com/2023/08/06/MultiThread-Pratice-4/index.html">
+<meta property="og:title" content="CEF3 系列 -- 实践汇总（持续更新）">
+<meta property="og:url" content="https://jalencui.com/2023/09/02/CEF-Pratice-Summary/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、前言本文摘自 C++ Concurrency IN  ACTION，一本基于 C++11 标准的并发和多线程编程深度指南。内容包括 std::thread、std::mutex、和 std::async 等基础类的使用，内存模型和原子操作、基于锁和无锁数据结构的构建，以及并行算法和线程管理。同时，会在部分章节附加 Qt 提供的便利工具。  基础类图中涉及 C++ 标准库 和 Qt 提供的一些工">
+<meta property="og:description" content="前言恰逢首次半年绩效考核(最高绩效 + 项目特别奖金)，博主颇有感慨。就输出一些技术相关的汇总, 比如：Cef。  20 年 7 月，博主应届入职大疆。那时起(7 Months)，博主首次接触 Web 相关开发：Electron &amp; VueJS 桌面客户端。 22 年 11 月底，博主入职新公司，并再次接触 Web 相关的开发：Qt &amp; QCefView 桌面客户端。  正文汇总主">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://jalencui.com/2023/08/06/MultiThread-Pratice-4/related_interfaces.png">
-<meta property="article:published_time" content="2023-08-06T10:46:00.000Z">
-<meta property="article:modified_time" content="2023-09-04T14:59:22.587Z">
+<meta property="article:published_time" content="2023-09-02T11:58:00.000Z">
+<meta property="article:modified_time" content="2023-09-04T15:06:58.077Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://jalencui.com/2023/08/06/MultiThread-Pratice-4/related_interfaces.png">
   
   
   
-  <title>并发系列 -- 汇总（持续更新） - Jalen&#39;s Blog</title>
+  <title>CEF3 系列 -- 实践汇总（持续更新） - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="并发系列 -- 汇总（持续更新）"></span>
+            <span id="subtitle" data-typed-text="CEF3 系列 -- 实践汇总（持续更新）"></span>
           
         </div>
 
@@ -209,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-06 18:46" pubdate>
-          August 6, 2023 pm
+        <time datetime="2023-09-02 19:58" pubdate>
+          September 2, 2023 pm
         </time>
       </span>
     
@@ -221,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          502 words
+          1.9k words
         
       </span>
     
@@ -232,7 +230,7 @@
         
         
         
-          5 mins
+          17 mins
         
       </span>
     
@@ -270,22 +268,47 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">并发系列 -- 汇总（持续更新）</h1>
+            <h1 style="display: none">CEF3 系列 -- 实践汇总（持续更新）</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>本文摘自 C++ Concurrency IN  ACTION，一本基于 C++11 标准的并发和多线程编程深度指南。内容包括 std::thread、std::mutex、和 std::async 等基础类的使用，内存模型和原子操作、基于锁和无锁数据结构的构建，以及并行算法和线程管理。同时，会在部分章节附加 Qt 提供的便利工具。</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>恰逢首次半年绩效考核(最高绩效 + 项目特别奖金)，博主颇有感慨。就输出一些技术相关的汇总, 比如：Cef。</p>
 <ul>
-<li>基础类<br><img src="/2023/08/06/MultiThread-Pratice-4/related_interfaces.png" srcset="/img/loading.gif" lazyload><br>图中涉及 C++ 标准库 和 Qt 提供的一些工具类。它们足以满足 99.9% 的应用开发需求。你见过多少呢？又对它们的应用场景了解多少？（哎，难以想象共事的多位 10 多年工龄的互联网员工竟然对线程毫无感觉。博主心好累~）</li>
-<li><del>内存模型</del></li>
-<li><del>数据结构</del></li>
-<li><del>并行算法</del></li>
-<li><del>线程管理</del></li>
+<li>20 年 7 月，博主应届入职大疆。那时起(7 Months)，博主首次接触 Web 相关开发：Electron &amp; VueJS 桌面客户端。</li>
+<li>22 年 11 月底，博主入职新公司，并再次接触 Web 相关的开发：Qt &amp; QCefView 桌面客户端。</li>
 </ul>
-<h1 id="二、并发编程实践"><a href="#二、并发编程实践" class="headerlink" title="二、并发编程实践"></a>二、并发编程实践</h1><p>该章节会结合博主 3 年多来在前端、后端、客户端方向的粗浅经验，对 C++ 并发编程作简要汇总。</p>
-<h2 id="1、管理线程"><a href="#1、管理线程" class="headerlink" title="1、管理线程"></a>1、管理线程</h2><p>C++ 标准库让大多数线程管理变得相对简单，通过与给定线程关联的 std::thread 对象就可以管理所有事情。对于不直观的任务，标准库也提供了从基本构造快进行按需构建的可扩展性。</p>
-<h3 id="基本线程管理"><a href="#基本线程管理" class="headerlink" title="基本线程管理"></a>基本线程管理</h3><h2 id="2、在线程间管理数据"><a href="#2、在线程间管理数据" class="headerlink" title="2、在线程间管理数据"></a><del>2、在线程间管理数据</del></h2><h2 id="3、同步并发操作"><a href="#3、同步并发操作" class="headerlink" title="3、同步并发操作"></a><del>3、同步并发操作</del></h2><h2 id="4、C-内存模型和原子类型操作"><a href="#4、C-内存模型和原子类型操作" class="headerlink" title="4、C++ 内存模型和原子类型操作"></a><del>4、C++ 内存模型和原子类型操作</del></h2><h2 id="5、数据结构：基于锁的并发数据结构，无锁的并发数据结构"><a href="#5、数据结构：基于锁的并发数据结构，无锁的并发数据结构" class="headerlink" title="5、数据结构：基于锁的并发数据结构，无锁的并发数据结构"></a><del>5、数据结构：基于锁的并发数据结构，无锁的并发数据结构</del></h2><h2 id="6、高级线程管理"><a href="#6、高级线程管理" class="headerlink" title="6、高级线程管理"></a><del>6、高级线程管理</del></h2>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>汇总主要关注应用开发中的技术问题、技术 <strong>‘难点’</strong> 。因此，后续部分将以列表形式给出。</p>
+<h2 id="1、Input-Method-Editor-IME"><a href="#1、Input-Method-Editor-IME" class="headerlink" title="1、Input Method Editor (IME)"></a>1、Input Method Editor (IME)</h2><p>详见 <a href="/2023/03/08/QCef-Ime-JSInject/" title="[杂项] CEF3 -- IME Behavior">[杂项] CEF3 -- IME Behavior</a>。</p>
+<h2 id="2、QCefView-输入法组合键：小语种（葡萄牙语）"><a href="#2、QCefView-输入法组合键：小语种（葡萄牙语）" class="headerlink" title="2、QCefView 输入法组合键：小语种（葡萄牙语）"></a>2、QCefView 输入法组合键：小语种（葡萄牙语）</h2><p>KeyBoardUtils 作为插件的辅助工具，主要用于 Qt 事件 –&gt; CEF3 事件的参数转换。其中的 <code>winGetKeyBoardModifiers</code> 接口，负责解析虚拟组合按键。</p>
+<ul>
+<li>问题代码段<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">uint32_t</span></span><br><span class="hljs-function"><span class="hljs-title">winGetKeyboardModifiers</span><span class="hljs-params">(QKeyEvent* qe)</span></span>&#123;<br>    ...<br>    <span class="hljs-keyword">if</span>(!qe-&gt;<span class="hljs-built_in">text</span>().<span class="hljs-built_in">isEmpty</span>() &amp;&amp; (::<span class="hljs-built_in">GetKeyState</span>(VK_RMENU) &amp; <span class="hljs-number">0x8000</span>))&#123;<br>        HKL current_layout = ::<span class="hljs-built_in">GetKeyBoardLayout</span>(<span class="hljs-number">0</span>);<br>        SHORT scan_res = ::<span class="hljs-built_in">VkKeyScanExW</span>(vk, current_layout);<br>        <span class="hljs-keyword">if</span>(((scan_res &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xFF</span>) == (<span class="hljs-number">2</span> | <span class="hljs-number">4</span>))&#123;<br>            cm &amp;= ~(EVENTFLAG_CONTROL_DOWN | EVENTFLAG_ALT_DOWN);<br>            cm |= EVENTFLAG_ALTGR_DOWN<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> cm;<br>&#125;<br></code></pre></td></tr></table></figure>
+首先，从代码风格可见 <strong>QCefView</strong> 作者具备深厚的 Window 开发功底。问题代码意图：<ul>
+<li>判断小语种键盘：<code>::GetKeyState(VK_RMENU) &amp; 0x8000</code></li>
+<li>获取键盘布局：<code>::GetKeyBoardLayout(0)</code></li>
+<li>通过 VirtualKey 和 物理键盘布局获取扫描码：<code>VkKeyScanExW(vk, current_layout)</code></li>
+<li>匹配 Control + ALT 组合键：位运算见上述代码。</li>
+</ul>
+</li>
+<li>修复代码段<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">uint32_t</span></span><br><span class="hljs-function"><span class="hljs-title">winGetKeyboardModifiers</span><span class="hljs-params">(QKeyEvent* qe)</span></span>&#123;<br>    ...<br>    <span class="hljs-keyword">if</span>(!qe-&gt;<span class="hljs-built_in">text</span>().<span class="hljs-built_in">isEmpty</span>())&#123;<br>        <span class="hljs-keyword">if</span>((m &amp; Qt::ControlModifier) &amp;&amp; (m &amp; Qt::ALtModifier))&#123;<br>            cm &amp;= ~(EVENTFLAG_CONTROL_DOWN | EVENTFLAG_ALT_DOWN);<br>            cm |= EVENTFLAG_ALTGR_DOWN<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> cm;<br>&#125;<br></code></pre></td></tr></table></figure>
+OSR 渲染模式下，我们无法获取正确的窗口句柄及其 Window 消息。所以，上述操作有点多此一举：只需要匹配 CONTROL + ALT 即可。</li>
+</ul>
+<h2 id="3、QCefView-Hover-Event-HoverIn-amp-HoverOut"><a href="#3、QCefView-Hover-Event-HoverIn-amp-HoverOut" class="headerlink" title="3、QCefView Hover Event: HoverIn &amp; HoverOut"></a>3、QCefView Hover Event: HoverIn &amp; HoverOut</h2><p><strong>CEF3 三种鼠标事件</strong> ：cef_browser_capi</p>
+<ul>
+<li>send_mouse_click_event: 处理鼠标点击</li>
+<li>send_mouse_move_event：处理鼠标移动</li>
+<li>send_mouse_wheel_event：处理鼠标滚轮</li>
+</ul>
+<p><strong>Qt 鼠标事件</strong> ：</p>
+<ul>
+<li>mouseMoveEvent: 鼠标移动</li>
+<li>mousePressEvent：鼠标按下</li>
+<li>mouseReleaseEvent：鼠标释放</li>
+<li>wheelEvent：鼠标滚轮</li>
+<li><strong>enterEvent</strong> &amp; <strong>leaveEvent</strong>: 鼠标移入 &amp; 移出</li>
+</ul>
+<p><strong>问题描述</strong> ：<br>QCefView 插件完美适配了 Qt 的前四种事件，即：mouseMove、mousePress、mouseRelease、wheelEvent。通过字面义，可以很清晰地将 CEF3 和 QCefView 事件映射。 然而，<code>enterEvent</code> 和 <code>leaveEvent</code> 并没有找到合适的选择。当窗口边缘属于可滚动区域时，边缘的滚动条的交互效果会出现 Bug: 缺少 HoverIn、HoverOut 效果。<br><strong>问题解决</strong> ：<br>通过测试，CEF3 的 send_mouse_move_event 接口兼具 moveMouse、mouseEnter 和 mouseLeave 的功能。因此，只需要按照 QCefView 接口规范，补充并转发 Qt 对应的 <strong>enterEvent</strong> 和 <strong>leaveEvent</strong> 即可。</p>
+
                 
               </div>
             
@@ -303,7 +326,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/C/" class="category-chain-item">C++</a>
+  <a href="/categories/Cef/" class="category-chain-item">Cef</a>
   
   
 
@@ -323,8 +346,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>并发系列 -- 汇总（持续更新）</div>
-      <div>https://jalencui.com/2023/08/06/MultiThread-Pratice-4/</div>
+      <div>CEF3 系列 -- 实践汇总（持续更新）</div>
+      <div>https://jalencui.com/2023/09/02/CEF-Pratice-Summary/</div>
     </div>
     <div class="license-meta">
       
@@ -336,7 +359,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>August 6, 2023</div>
+          <div>September 2, 2023</div>
         </div>
       
       
@@ -368,18 +391,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/02/CEF-Pratice-Summary/" title="CEF3 系列 -- 实践汇总（持续更新）">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CEF3 系列 -- 实践汇总（持续更新）</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/12/MultiThread-Pratice-1/" title="并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）">
-                        <span class="hidden-mobile">并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）</span>
+                      <a href="/2023/08/06/MultiThread-Pratice-4/" title="并发系列 -- 汇总（持续更新）">
+                        <span class="hidden-mobile">并发系列 -- 汇总（持续更新）</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
