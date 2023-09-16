@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>[SDK] Golang 下载器 -- 集成前置</title>
+    <link href="/2023/09/15/SDK-Downloader-part1/"/>
+    <url>/2023/09/15/SDK-Downloader-part1/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>平台客户端集成了下载游戏主体、DLC 等资源的功能。项目前期，我们使用了 Aria2c 作为辅助下载工具(非 libaria)。由于 blabla 等原因，项目组决定自研下载工具，开发语言暂定为 Golang。<br>入职至今，博主负责了端内 80% 的工作。当然，也包括了 Aria2c 的接入工作。因此，集成自研下载器的工作由我来负责。</p><h1 id="二、现状"><a href="#二、现状" class="headerlink" title="二、现状"></a>二、现状</h1><p>自研下载器是采用 Golang 语言开发，并以库的形式供平台集成。开发前期存在以下问题：</p><ul><li>Golang 只能提供 Windows 平台的动态链接库，且缺少 *.lib 符号文件</li><li>自研库的开发同学资历尚浅，且库未作 Windows 平台下的功能性验证</li></ul><p>因此，要作一些准备工作以提高开发效率：</p><ul><li>lib 生成工具：以应对 SDK 接入前期频繁更换库文件的情况</li><li>C++ 测试环境：以用于 SDK 接入前期的频繁验证工作</li></ul><h1 id="三、解决方案"><a href="#三、解决方案" class="headerlink" title="三、解决方案"></a>三、解决方案</h1><p>本节内容将以列表形式提供: lib 工具生成、VSCode 测试环境</p><h2 id="1、lib-工具生成"><a href="#1、lib-工具生成" class="headerlink" title="1、lib 工具生成"></a>1、lib 工具生成</h2><p>动态库的使用方式分为：动态调用，静态调用。SDK 导出库只给到了 *.h 和 *.dll 文件。要想以静态调用的方式使用，我们需要通过 *.dll 生成对应的 *.lib 符号文件。大致步骤如下：</p><ul><li><strong>导出 dump.txt</strong><br>使用 Developer Command Prompt for VS 20XX 工具，通过命令行 <code>dumpbin /EXPORTS *.dll &gt; dump.txt</code> 导出：<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs tap">Dump of file 7z.dll<br><br>File Type: DLL<br><br>  Section contains the following exports for 7z.dll<br><br>   <span class="hljs-number"> 00000000 </span>characteristics<br>    62D16FC1 time date stamp Fri Jul<span class="hljs-number"> 15 </span>21:46:41 2022<br>        0.00 version<br>          <span class="hljs-number"> 1 </span>ordinal base<br>         <span class="hljs-number"> 13 </span>number of functions<br>         <span class="hljs-number"> 13 </span>number of names<br><br>    ordinal hint RVA      name<br>         <span class="hljs-number"> 1 </span>  <span class="hljs-number"> 0 </span>0010D6E0 CreateDecoder<br>          .<br>  Summary<br>       <span class="hljs-number"> 9000 </span>.data<span class="hljs-number"> 13000 </span>.pdata<span class="hljs-number"> 55000 </span>.rdata<span class="hljs-number"> 4000 </span>.reloc<span class="hljs-number"> 19000 </span>.rsrc<span class="hljs-number"> 137000 </span>.text<br></code></pre></td></tr></table></figure>导出信息相当丰富，但我们只需要 Section 段落中的导出函数名, 比如：CreateDecoder 等…</li><li><strong>生成 .def</strong><br>DEF 文件格式详见<a href="https://learn.microsoft.com/zh-cn/cpp/build/reference/moduledefinition-dot-def-files?view=msvc-170">官方介绍</a>。本着最简原则，我们只需要用到：LIBRARY、EXPORTS。为了简化操作步骤，我们需要一个辅助工具: 根据 dump 信息生成 .def 文件 <strong>(导出接口变化时，才需要重新导出 DEF)</strong> 。辅助工具逻辑大致如下：<ul><li>读取 dump 文件: <code>dump.txt</code></li><li>定位 Section 段落：<ul><li>begin with： <code>original hint RVA</code> </li><li>end with: <code>Summary</code></li></ul></li><li>搜索符号并写入 .DEF 文件</li></ul></li><li><strong>生成 .lib</strong> ：<br>使用 Developer Command Prompt for VS 工具，通过命令行: <code>lib /def:example.def /machine:x64 /out:example.lib</code></li></ul><h2 id="2、测试环境搭建：VSCode-with-C"><a href="#2、测试环境搭建：VSCode-with-C" class="headerlink" title="2、测试环境搭建：VSCode with C++"></a>2、测试环境搭建：VSCode with C++</h2><p>当 DLL 接口更新时，涉及到的工作流大致如下：</p><ul><li>测试环境：快速生成 EXE、快速步进 DEBUG。</li><li>测试链路： 生成 .lib –&gt; 生成 EXE –&gt; DEBUG。</li></ul><p>VSCode 谁用谁知道，开发利器。因此，博主就将 VSCode 作为我们的测试环境。 关于 VSCode C++ 环境的搭建，网上教程一大把。因此，博主只对一些必要的配置做介绍。</p><ul><li><strong>mingw64</strong>: 提供 Windows 下软件构建所需的工具，如：gcc, g++ 等</li><li><strong>launch.json</strong>: vscode 启动程序的配置文件<ul><li>program: EXE 的全路径</li><li>miDebuggerPath: GDB 的全路径</li><li>preLaunchTask: EXE 运行的前置工作，如：编译工作。</li></ul></li><li><strong>task.json</strong>: 协助 launch.json 的前置工作<ul><li>label: 任务提示词，执行构建时供用户选用的提示</li><li>command: 执行命令</li><li>args: 构建参数，比如：源文件、包含路径、依赖路径等</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CEF3 系列 -- 实践汇总（持续更新）</title>
     <link href="/2023/09/02/CEF-Pratice-Summary/"/>
     <url>/2023/09/02/CEF-Pratice-Summary/</url>
