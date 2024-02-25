@@ -16,15 +16,15 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景平台客户端集成了下载游戏主体、DLC 等资源的功能。项目前期，我们使用了 Aria2c 作为辅助下载工具(非 libaria)。由于 blabla 等原因，项目组决定自研下载工具，开发语言暂定为 Golang。入职至今，博主负责了端内 80% 的工作。当然，也包括了 Aria2c 的接入工作。因此，集成自研下载器的工作由我来负责。 二、现状自研下载器是采用 Golang 语言开发，并以库的">
+    <meta name="description" content="一、背景桌面客户端开发会涉及到文件更新：大文件的局部更新。通常情况下，我们可以使用了 Aria2c 作为辅助下载工具(非 libaria)。文件局部更新的需求，实现主流的更新下载方案很重要。 二、现状自研下载器是采用 Golang 语言开发，并以库的形式供平台集成。开发前期存在以下问题：  Golang 只能提供 Windows 平台的动态链接库，且缺少 *.lib 符号文件 自研库的开发同学资历">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SDK 系列 -- 下载器 -- 前置工作">
 <meta property="og:url" content="https://jalencui.com/2023/09/15/SDK-Downloader-part1/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、背景平台客户端集成了下载游戏主体、DLC 等资源的功能。项目前期，我们使用了 Aria2c 作为辅助下载工具(非 libaria)。由于 blabla 等原因，项目组决定自研下载工具，开发语言暂定为 Golang。入职至今，博主负责了端内 80% 的工作。当然，也包括了 Aria2c 的接入工作。因此，集成自研下载器的工作由我来负责。 二、现状自研下载器是采用 Golang 语言开发，并以库的">
+<meta property="og:description" content="一、背景桌面客户端开发会涉及到文件更新：大文件的局部更新。通常情况下，我们可以使用了 Aria2c 作为辅助下载工具(非 libaria)。文件局部更新的需求，实现主流的更新下载方案很重要。 二、现状自研下载器是采用 Golang 语言开发，并以库的形式供平台集成。开发前期存在以下问题：  Golang 只能提供 Windows 平台的动态链接库，且缺少 *.lib 符号文件 自研库的开发同学资历">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-09-15T10:36:00.000Z">
-<meta property="article:modified_time" content="2023-10-21T02:46:42.398Z">
+<meta property="article:modified_time" content="2024-02-25T09:26:14.327Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -230,7 +230,7 @@
         
         
         
-          14 mins
+          15 mins
         
       </span>
     
@@ -273,7 +273,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>平台客户端集成了下载游戏主体、DLC 等资源的功能。项目前期，我们使用了 Aria2c 作为辅助下载工具(非 libaria)。由于 blabla 等原因，项目组决定自研下载工具，开发语言暂定为 Golang。<br>入职至今，博主负责了端内 80% 的工作。当然，也包括了 Aria2c 的接入工作。因此，集成自研下载器的工作由我来负责。</p>
+                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>桌面客户端开发会涉及到文件更新：大文件的局部更新。通常情况下，我们可以使用了 Aria2c 作为辅助下载工具(非 libaria)。文件局部更新的需求，实现主流的更新下载方案很重要。</p>
 <h1 id="二、现状"><a href="#二、现状" class="headerlink" title="二、现状"></a>二、现状</h1><p>自研下载器是采用 Golang 语言开发，并以库的形式供平台集成。开发前期存在以下问题：</p>
 <ul>
 <li>Golang 只能提供 Windows 平台的动态链接库，且缺少 *.lib 符号文件</li>
@@ -285,7 +285,7 @@
 <li>C++ 测试环境：以用于 SDK 接入前期的频繁验证工作</li>
 </ul>
 <h1 id="三、解决方案"><a href="#三、解决方案" class="headerlink" title="三、解决方案"></a>三、解决方案</h1><p>本节内容将以列表形式提供: lib 工具生成、VSCode 测试环境</p>
-<h2 id="1、lib-工具生成"><a href="#1、lib-工具生成" class="headerlink" title="1、lib 工具生成"></a>1、lib 工具生成</h2><p>动态库的使用方式分为：动态调用，静态调用。SDK 导出库只给到了 *.h 和 *.dll 文件。要想以静态调用的方式使用，我们需要通过 *.dll 生成对应的 *.lib 符号文件。大致步骤如下：</p>
+<h2 id="1、lib-生成（手动）"><a href="#1、lib-生成（手动）" class="headerlink" title="1、lib 生成（手动）"></a>1、lib 生成（手动）</h2><p>动态库的使用方式分为：动态调用，静态调用。SDK 导出库只给到了 *.h 和 *.dll 文件。要想以静态调用的方式使用，我们需要通过 *.dll 生成对应的 *.lib 符号文件。大致步骤如下：</p>
 <ul>
 <li><strong>导出 dump.txt</strong><br>使用 Developer Command Prompt for VS 20XX 工具，通过命令行 <code>dumpbin /EXPORTS *.dll &gt; dump.txt</code> 导出：<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs tap">Dump of file 7z.dll<br><br>File Type: DLL<br><br>  Section contains the following exports for 7z.dll<br><br>   <span class="hljs-number"> 00000000 </span>characteristics<br>    62D16FC1 time date stamp Fri Jul<span class="hljs-number"> 15 </span>21:46:41 2022<br>        0.00 version<br>          <span class="hljs-number"> 1 </span>ordinal base<br>         <span class="hljs-number"> 13 </span>number of functions<br>         <span class="hljs-number"> 13 </span>number of names<br><br>    ordinal hint RVA      name<br>         <span class="hljs-number"> 1 </span>  <span class="hljs-number"> 0 </span>0010D6E0 CreateDecoder<br>          .<br>  Summary<br>       <span class="hljs-number"> 9000 </span>.data<span class="hljs-number"> 13000 </span>.pdata<span class="hljs-number"> 55000 </span>.rdata<span class="hljs-number"> 4000 </span>.reloc<span class="hljs-number"> 19000 </span>.rsrc<span class="hljs-number"> 137000 </span>.text<br></code></pre></td></tr></table></figure>
 导出信息相当丰富，但我们只需要 Section 段落中的导出函数名, 比如：CreateDecoder 等…</li>
@@ -301,7 +301,9 @@
 </li>
 <li><strong>生成 .lib</strong> ：<br>使用 Developer Command Prompt for VS 工具，通过命令行: <code>lib /def:example.def /machine:x64 /out:example.lib</code></li>
 </ul>
-<h2 id="2、测试环境搭建：VSCode-with-C"><a href="#2、测试环境搭建：VSCode-with-C" class="headerlink" title="2、测试环境搭建：VSCode with C++"></a>2、测试环境搭建：VSCode with C++</h2><p>当 DLL 接口更新时，涉及到的工作流大致如下：</p>
+<h2 id="2、lib-生成工具"><a href="#2、lib-生成工具" class="headerlink" title="2、lib 生成工具"></a>2、lib 生成工具</h2><p>现成的开源工具 <a target="_blank" rel="noopener" href="https://digitalmars.com/ctg/implib.html">IMPLIB</a>，可以根据 DLL 文件或者 DEF 文件生成对应的导出文件 LIB。使用教程可参考官方文件，大致命令如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">implib [switches] libfile [ dllfile | deffile ]<br></code></pre></td></tr></table></figure>
+<h2 id="3、测试环境搭建：VSCode-with-C"><a href="#3、测试环境搭建：VSCode-with-C" class="headerlink" title="3、测试环境搭建：VSCode with C++"></a>3、测试环境搭建：VSCode with C++</h2><p>当 DLL 接口更新时，涉及到的工作流大致如下：</p>
 <ul>
 <li>测试环境：快速生成 EXE、快速步进 DEBUG。</li>
 <li>测试链路： 生成 .lib –&gt; 生成 EXE –&gt; DEBUG。</li>

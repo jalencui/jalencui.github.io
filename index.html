@@ -232,7 +232,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/09/15/SDK-Downloader-part1/" target="_self">
         <div>
-          一、背景平台客户端集成了下载游戏主体、DLC 等资源的功能。项目前期，我们使用了 Aria2c 作为辅助下载工具(非 libaria)。由于 blabla 等原因，项目组决定自研下载工具，开发语言暂定为 Golang。入职至今，博主负责了端内 80% 的工作。当然，也包括了 Aria2c 的接入工作。因此，集成自研下载器的工作由我来负责。 二、现状自研下载器是采用 Golang 语言开发，并以库的
+          一、背景桌面客户端开发会涉及到文件更新：大文件的局部更新。通常情况下，我们可以使用了 Aria2c 作为辅助下载工具(非 libaria)。文件局部更新的需求，实现主流的更新下载方案很重要。 二、现状自研下载器是采用 Golang 语言开发，并以库的形式供平台集成。开发前期存在以下问题：  Golang 只能提供 Windows 平台的动态链接库，且缺少 *.lib 符号文件 自研库的开发同学资历
         </div>
       </a>
 
@@ -286,7 +286,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/09/02/CEF-Pratice-Summary/" target="_self">
         <div>
-          前言恰逢首次半年绩效考核(最高绩效 + 项目特别奖金)，博主颇有感慨。就输出一些技术相关的汇总, 比如：Cef。  20 年 7 月，博主应届入职大疆。那时起(7 Months)，博主首次接触 Web 相关开发：Electron &amp; VueJS 桌面客户端。 22 年 11 月底，博主入职新公司，并再次接触 Web 相关的开发：Qt &amp; QCefView 桌面客户端。  正文汇总主
+          前言首次半年绩效考核，挺好的绩效。输出一些技术相关的汇总, 比如：Cef。  20 年 7 月，应届入职。博主首次接触 Web 相关开发：Electron &amp; VueJS 桌面客户端。 22 年 11 月，博主入职新公司，并再次接触 Web 相关的开发：Qt &amp; QCefView 桌面客户端。  正文汇总主要关注应用开发中的技术问题、技术 ‘难点’ 。因此，后续部分将以列表形式给出
         </div>
       </a>
 
@@ -394,7 +394,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/12/MultiThread-Pratice-1/" target="_self">
         <div>
-          一、项目背景大疆 (深圳) RoboMaster 部门主要服务于机甲大师高校系列赛，其中的 超级对抗赛 是相对比较重要的赛事。超级对抗赛举办期间，会直播各个高校之间的多兵种机器人实时对抗。博主在大疆任职期间，全权负责赛事直播项目的 Windows 桌面端开发工作：   (1) AR 后端AR后端充分利用 Qt Designer 提供的能力 (Custom Widget), 设计出一套能够快速集成各
+          一、项目背景博主在职期间，负责赛事直播项目的 Windows 桌面端开发工作：   (1) AR 后台系统AR后端充分利用 Qt Designer 提供的能力 (Custom Widget), 设计出一套能够快速集成各个算法模块的 标准化组件 。   上图是由 QT 构建的实时处理系统，可划分为两大组成部分：  主框架（EXE）：为各算法模块的运作提供了一致的行为规范，包括：加载、运行、状态监测、
         </div>
       </a>
 
@@ -556,7 +556,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/03/28/QML-ImageSlider-Reconstruct/" target="_self">
         <div>
-          背景介绍项目初期，轮播图组件是根据 github 开源项目魔改的，其效果自然不符合需求。在后续的重构过程中，由于各种原因导致效果仍没有解决根本问题（博主未能完全参与其中）。 如今刚好赶上好时光，那就先以 ImageSlider 为例进行简要介绍。 预备知识ImageSlider 组件涉及到的知识点比较广。因此，博主把一些需要强调的非组件知识放在 预备知识 环节。 ImageProvider The
+          背景介绍Qt 客户端开发入门容易，进阶难哦。举个例子：同事 A 开发耗时30d (15d 开发 + 15d 优化)，而且一堆烂代码。同事 B 开发耗时 3d 已达到最优化状态。虚线带人好难哦~~~ 预备知识ImageSlider 组件涉及到的知识点比较广。因此，博主把一些需要强调的非组件知识放在 预备知识 环节。 ImageProvider The QQuickImageProvider clas
         </div>
       </a>
 
