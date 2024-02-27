@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>SDK 系列 -- Crashes</title>
+    <link href="/2024/02/27/SDK-Crashes/"/>
+    <url>/2024/02/27/SDK-Crashes/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>应用开发时，难免遇到崩溃问题：常识用于缩小检索范围；检索能力要靠经验积累喽。</p><h1 id="二、SDK-崩溃："><a href="#二、SDK-崩溃：" class="headerlink" title="二、SDK 崩溃："></a>二、SDK 崩溃：</h1><ul><li>spdlog: 开源日志库<br>当日志路径存在 utf16 字符时，构造函数传入的路径参数会造成崩溃。此时，需要单独构建支持 utf16 的库版本。</li><li>zmq: 开源IPC库<br>zmq 会在当前用户目录下的某个路径写入一些临时数据。如果当前用户的账户名存在 utf16 字符时，zmq 创建 socket 时，会导致进程强制退出（quit）。zmq 4.3.5 版本已修复。</li><li>cef: 开源webview库<br>如果 cef 运行目录和安装目录中存在 utf16 字符，页面渲染会出现黑屏现象。博主当时的解决方式是更新 cef 的版本（95 –&gt; 109）。</li><li>bit7z: 开源解压缩库<br>当有解压缩文件需求时，我们可选地有 7z.exe 或者 集成 bit7z。<br>对于使用bit7z的应用，有两个版本可选：V3, V4。V3 版本的 bit7z 不支持解压缩途中退出。V4 版本的 bit7z 借助业务回调接口的返回值（0 or 非0）达到了中途退出的目的。然而，V4.0.0 版本的异常捕获机制存在崩溃Bug(空间不足时崩溃)。<br>截至 2024年2月27日，bit7z 已更新至 V4.0.5 版本。不确定后来的版本是否修复上述问题哦。</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>SDK</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>SDK 系列 -- CEF -- 构建流程(Current Branches &amp; Legacy Branches)</title>
     <link href="/2024/02/26/CEF-Build/"/>
     <url>/2024/02/26/CEF-Build/</url>
