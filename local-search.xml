@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Windows系列 -- 设备IO</title>
+    <link href="/2024/04/07/Windows-DeviceIO/"/>
+    <url>/2024/04/07/Windows-DeviceIO/</url>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本篇索引大致分为以下内容：设备、接口、同步设备I&#x2F;O、异步设备I&#x2F;O。 该篇非入门，可止步。</p><h1 id="汇总"><a href="#汇总" class="headerlink" title="汇总"></a>汇总</h1><p>本节以图示形式列出，供随时索引。更详细节可参考 Windows via C&#x2F;C++ (第五版)。<br><img src="/2024/04/07/Windows-DeviceIO/deviceio.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Windows</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Windows 系列 -- 规划</title>
     <link href="/2024/04/07/Windows-OpenTopic/"/>
     <url>/2024/04/07/Windows-OpenTopic/</url>
