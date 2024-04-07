@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Windows 系列 -- 规划</title>
+    <link href="/2024/04/07/Windows-OpenTopic/"/>
+    <url>/2024/04/07/Windows-OpenTopic/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>该系列将作为 Windows via C&#x2F;C++ (第五版)的索引，大致可分为以下几类：</p><ul><li>Windows 内核对象：重中之重。</li><li>Windows 开发通识: 一些常识，比如: 进程，线程，设备等。</li><li>Windows 技术设施: 一些便捷接口，比如：可提醒 IO 提供的 QueueForAPC 机制。</li></ul><h1 id="二、规划"><a href="#二、规划" class="headerlink" title="二、规划"></a>二、规划</h1><ul><li>设备IO</li><li>Windows 消息</li><li>…</li></ul><h1 id="三、体会"><a href="#三、体会" class="headerlink" title="三、体会"></a>三、体会</h1><p>Windows Job: 管理，监听当前 Process 及其 Child Process。无论是业务开发，还是日常 Debug (配合IOCP)，真好用。<br>Windows Message: 便捷的 IPC 通信小助手。借助冗余字段，可轻易搭建 Process 间的双向通信。<br>…</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Windows</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>SDK 系列 -- Crashes</title>
     <link href="/2024/02/27/SDK-Crashes/"/>
     <url>/2024/02/27/SDK-Crashes/</url>
