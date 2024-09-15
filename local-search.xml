@@ -80,7 +80,26 @@
   
   
   <entry>
-    <title>SDK 系列 -- 下载器 -- 前置工作</title>
+    <title>下载器 -- IPC 调研(备忘) -- 2024.09.15 旧稿发布</title>
+    <link href="/2023/09/16/SDK-Downlaoder-part2/"/>
+    <url>/2023/09/16/SDK-Downlaoder-part2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、需求"><a href="#一、需求" class="headerlink" title="一、需求"></a>一、需求</h1><p>对于自研下载器，我们可以直接复用 Aria2c 模块中的 XML-RPC 或者调研新的 IPC 通信。</p><h1 id="二、现状"><a href="#二、现状" class="headerlink" title="二、现状"></a>二、现状</h1><p>端内集成的 Aria2c 下载器使用定制的 MaiaIPC 进行通信：http post。会存在一些问题：</p><ul><li>Http 链接：N 组资源下载，需要在业务层维持 N 个 Http链接</li><li>状态查询：定时主动轮询，会存在 60% 以上的无效查询。</li><li>异常同步：强依赖状态查询。若不查询，则无法获取异常信息。</li></ul><p><img src="/2023/09/16/SDK-Downlaoder-part2/maia_ipc.png"></p><h1 id="三、预期"><a href="#三、预期" class="headerlink" title="三、预期"></a>三、预期</h1><p>新版 IPC 要能做到按需同步信息，主要是状态信息。按照现有的资源下载机制，新版 IPC 流程大致如下：</p><p><img src="/2023/09/16/SDK-Downlaoder-part2/ipc_wrapper.png"></p><p>一些针对性改进：</p><ul><li>在业务层面，client只需要提前简历两个链接；downloader 也只需跟对应的两个链接通信</li><li>client 可以主动给 downlaoder 下发命令（暂停，继续等）; downloader 也可以主动上报（状态，异常等）</li></ul><h1 id="四、调研"><a href="#四、调研" class="headerlink" title="四、调研"></a>四、调研</h1><p>1、gRPC<br>库过于庞大，存在过多无用功能。暂不考虑应用在 IPC 通信。</p><p>2、Microsoft IPC<br>C++ 模板库。但提供的功能单一，仅支持了同步的 REQ&#x2F;REP 机制。后续持续跟进，并验证可用性。</p><p>3、ZeroMQ<br>轻量的嵌入式IPC库。具有相对灵活的可定制性。非 Win10 或者 Win10（17063 以下）系统，只能使用 socket。不过，unix domain socket 挺香。<br>(注：RabbitMQ, RocketMQ, Kafka 各有其用，不在本文考虑范围内)</p><h1 id="五、实现"><a href="#五、实现" class="headerlink" title="五、实现"></a>五、实现</h1><p>使用 ZeroMQ 实现 IPC 通信功能。PUB&#x2F;SUB 通信模式如下：</p><p><img src="/2023/09/16/SDK-Downlaoder-part2/fanin_fanout.png"></p><h1 id="六、建议"><a href="#六、建议" class="headerlink" title="六、建议"></a>六、建议</h1><ul><li>win 10 (17063) 以下系统，只能使用 socket 进行 IPC 通信。</li><li>在 windows 环境下，zmq 使用 wepoll 开源库支持 epoll。经线上实践，wepoll 存在问题。因此， windows 环境下的 polling 机制建议选择 select。</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>下载器 -- 调试工具(备忘)</title>
     <link href="/2023/09/15/SDK-Downloader-part1/"/>
     <url>/2023/09/15/SDK-Downloader-part1/</url>
     
