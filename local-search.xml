@@ -4,7 +4,26 @@
   
   
   <entry>
-    <title>Aria2- 基础应用（持续更新）</title>
+    <title>【杂项】Windows 异形窗体改造</title>
+    <link href="/2024/09/17/Windows-HeteroTypeWindow/"/>
+    <url>/2024/09/17/Windows-HeteroTypeWindow/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h1><p>Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。</p><h1 id="二、技术点"><a href="#二、技术点" class="headerlink" title="二、技术点"></a>二、技术点</h1><h3 id="技术点1：异形窗体"><a href="#技术点1：异形窗体" class="headerlink" title="技术点1：异形窗体"></a>技术点1：异形窗体</h3><p>使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。</p><h3 id="技术点2：鼠标穿透至桌面"><a href="#技术点2：鼠标穿透至桌面" class="headerlink" title="技术点2：鼠标穿透至桌面"></a>技术点2：鼠标穿透至桌面</h3><p>鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。</p><h3 id="技术点3：-窗体缩放"><a href="#技术点3：-窗体缩放" class="headerlink" title="技术点3： 窗体缩放"></a>技术点3： 窗体缩放</h3><ul><li>窗体样式： WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_MINIMIZEBOX</li><li>鼠标输入通知： WM_NCHITTEST 是鼠标时间的入口。其返回值：HTCAPTION, HTTOP, HTTOPRIGHT…</li><li>窗体通知： WM_SIZING | WM_MOVING | WM_ENTERSIZEMVOE | WM_EXITSIZEMOVE | WM_GETMINMAXINFO | WM_NCLBUTTONDBLCLK | WM_NCCALCSIZE</li></ul><p>注：本部分仅列出实现功能所涉及的 window style, window notifications 和 window messages.</p><h1 id="三、-疑难点"><a href="#三、-疑难点" class="headerlink" title="三、 疑难点"></a>三、 疑难点</h1><h3 id="疑难点1：-桌面顶部停靠"><a href="#疑难点1：-桌面顶部停靠" class="headerlink" title="疑难点1： 桌面顶部停靠"></a>疑难点1： 桌面顶部停靠</h3><p>当窗口移动时，顶部透明区域需要被裁剪：WM_MOVING, WM_EXITSIZEMOVE</p><h3 id="疑难点2：-裁剪与缩放的冲突"><a href="#疑难点2：-裁剪与缩放的冲突" class="headerlink" title="疑难点2： 裁剪与缩放的冲突"></a>疑难点2： 裁剪与缩放的冲突</h3><p>当窗体缩放时，需要取消裁剪操作以避免窗体抖动：WM_SIZING | WM_NCCALCSIZE | WM_NCHITTEST </p><h3 id="疑难点3：-跨屏窗体异常"><a href="#疑难点3：-跨屏窗体异常" class="headerlink" title="疑难点3： 跨屏窗体异常"></a>疑难点3： 跨屏窗体异常</h3><p>当拖动窗体跨越具有不同 DPI 的屏幕时，需要刷新窗口：WM_ENTERSIZEMOVE | WM_EXITSIZEMOVE | QWindow::screenChanged</p><p>注：本部分仅列出解决问题需要的 window notifications 和 一些接口。</p><h1 id="四、剖析"><a href="#四、剖析" class="headerlink" title="四、剖析"></a>四、剖析</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本部分仅对 1 例疑难点处理作简要分析，其它同理。</p><h3 id="基本常识"><a href="#基本常识" class="headerlink" title="基本常识"></a>基本常识</h3><p>windows 桌面窗口控制着所有顶层窗口的行为。本部分不再重复介绍，有以下链接可参考</p><ul><li><a href="https://blog.csdn.net/tonglin12138/article/details/103967711">https://blog.csdn.net/tonglin12138/article/details/103967711</a></li><li><a href="https://www.cnblogs.com/staring-hxs/p/3202219.html">https://www.cnblogs.com/staring-hxs/p/3202219.html</a></li></ul><p>注：上述链接对于顶层窗口，子窗口等术语的定义会存在出入，一切以 Windows App Development 为准。</p><h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>to be continued…</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Windows</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>【杂项】Aria2- 基础应用（持续更新）</title>
     <link href="/2024/09/16/Aria2-CommonSence-1/"/>
     <url>/2024/09/16/Aria2-CommonSence-1/</url>
     

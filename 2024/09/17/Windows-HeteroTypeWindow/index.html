@@ -16,21 +16,21 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、Aria 基础设施Aria2 下载器Aria2 下载器支持多种 IPC 通信模式： JSON-RPC, XML-RPC。 IPC 机制基于 Aria2 提供的 RPC 机制， 我们选择了 xmlrpc 作为进程间通信方式。xmlrpc 开源库多种多样， 比如：libmaia, timxmlrpc。  libmaia: https:&#x2F;&#x2F;github.com&#x2F;wiedi&#x2F;libmaia一款为 Qt">
+    <meta name="description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【杂项】Aria2- 基础应用（持续更新）">
-<meta property="og:url" content="https://jalencui.com/2024/09/16/Aria2-CommonSence-1/index.html">
+<meta property="og:title" content="【杂项】Windows 异形窗体改造">
+<meta property="og:url" content="https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="1、Aria 基础设施Aria2 下载器Aria2 下载器支持多种 IPC 通信模式： JSON-RPC, XML-RPC。 IPC 机制基于 Aria2 提供的 RPC 机制， 我们选择了 xmlrpc 作为进程间通信方式。xmlrpc 开源库多种多样， 比如：libmaia, timxmlrpc。  libmaia: https:&#x2F;&#x2F;github.com&#x2F;wiedi&#x2F;libmaia一款为 Qt">
+<meta property="og:description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-09-16T15:24:00.000Z">
-<meta property="article:modified_time" content="2024-09-16T16:37:00.872Z">
+<meta property="article:published_time" content="2024-09-16T16:05:00.000Z">
+<meta property="article:modified_time" content="2024-09-16T16:36:55.526Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>【杂项】Aria2- 基础应用（持续更新） - Jalen&#39;s Blog</title>
+  <title>【杂项】Windows 异形窗体改造 - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【杂项】Aria2- 基础应用（持续更新）"></span>
+            <span id="subtitle" data-typed-text="【杂项】Windows 异形窗体改造"></span>
           
         </div>
 
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-16 23:24" pubdate>
-          September 16, 2024 pm
+        <time datetime="2024-09-17 00:05" pubdate>
+          September 17, 2024 am
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          764 words
+          993 words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          7 mins
+          9 mins
         
       </span>
     
@@ -268,35 +268,32 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【杂项】Aria2- 基础应用（持续更新）</h1>
+            <h1 style="display: none">【杂项】Windows 异形窗体改造</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1、Aria-基础设施"><a href="#1、Aria-基础设施" class="headerlink" title="1、Aria 基础设施"></a>1、Aria 基础设施</h1><h3 id="Aria2-下载器"><a href="#Aria2-下载器" class="headerlink" title="Aria2 下载器"></a>Aria2 下载器</h3><p>Aria2 下载器支持多种 IPC 通信模式： JSON-RPC, XML-RPC。</p>
-<h3 id="IPC-机制"><a href="#IPC-机制" class="headerlink" title="IPC 机制"></a>IPC 机制</h3><p>基于 Aria2 提供的 RPC 机制， 我们选择了 xmlrpc 作为进程间通信方式。xmlrpc 开源库多种多样， 比如：libmaia, timxmlrpc。</p>
+                <h1 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h1><p>Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。</p>
+<h1 id="二、技术点"><a href="#二、技术点" class="headerlink" title="二、技术点"></a>二、技术点</h1><h3 id="技术点1：异形窗体"><a href="#技术点1：异形窗体" class="headerlink" title="技术点1：异形窗体"></a>技术点1：异形窗体</h3><p>使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。</p>
+<h3 id="技术点2：鼠标穿透至桌面"><a href="#技术点2：鼠标穿透至桌面" class="headerlink" title="技术点2：鼠标穿透至桌面"></a>技术点2：鼠标穿透至桌面</h3><p>鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。</p>
+<h3 id="技术点3：-窗体缩放"><a href="#技术点3：-窗体缩放" class="headerlink" title="技术点3： 窗体缩放"></a>技术点3： 窗体缩放</h3><ul>
+<li>窗体样式： WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_MINIMIZEBOX</li>
+<li>鼠标输入通知： WM_NCHITTEST 是鼠标时间的入口。其返回值：HTCAPTION, HTTOP, HTTOPRIGHT…</li>
+<li>窗体通知： WM_SIZING | WM_MOVING | WM_ENTERSIZEMVOE | WM_EXITSIZEMOVE | WM_GETMINMAXINFO | WM_NCLBUTTONDBLCLK | WM_NCCALCSIZE</li>
+</ul>
+<p>注：本部分仅列出实现功能所涉及的 window style, window notifications 和 window messages.</p>
+<h1 id="三、-疑难点"><a href="#三、-疑难点" class="headerlink" title="三、 疑难点"></a>三、 疑难点</h1><h3 id="疑难点1：-桌面顶部停靠"><a href="#疑难点1：-桌面顶部停靠" class="headerlink" title="疑难点1： 桌面顶部停靠"></a>疑难点1： 桌面顶部停靠</h3><p>当窗口移动时，顶部透明区域需要被裁剪：WM_MOVING, WM_EXITSIZEMOVE</p>
+<h3 id="疑难点2：-裁剪与缩放的冲突"><a href="#疑难点2：-裁剪与缩放的冲突" class="headerlink" title="疑难点2： 裁剪与缩放的冲突"></a>疑难点2： 裁剪与缩放的冲突</h3><p>当窗体缩放时，需要取消裁剪操作以避免窗体抖动：WM_SIZING | WM_NCCALCSIZE | WM_NCHITTEST </p>
+<h3 id="疑难点3：-跨屏窗体异常"><a href="#疑难点3：-跨屏窗体异常" class="headerlink" title="疑难点3： 跨屏窗体异常"></a>疑难点3： 跨屏窗体异常</h3><p>当拖动窗体跨越具有不同 DPI 的屏幕时，需要刷新窗口：WM_ENTERSIZEMOVE | WM_EXITSIZEMOVE | QWindow::screenChanged</p>
+<p>注：本部分仅列出解决问题需要的 window notifications 和 一些接口。</p>
+<h1 id="四、剖析"><a href="#四、剖析" class="headerlink" title="四、剖析"></a>四、剖析</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本部分仅对 1 例疑难点处理作简要分析，其它同理。</p>
+<h3 id="基本常识"><a href="#基本常识" class="headerlink" title="基本常识"></a>基本常识</h3><p>windows 桌面窗口控制着所有顶层窗口的行为。本部分不再重复介绍，有以下链接可参考</p>
 <ul>
-<li>libmaia: <a target="_blank" rel="noopener" href="https://github.com/wiedi/libmaia">https://github.com/wiedi/libmaia</a><br>一款为 Qt 定制的 XML-RPC 库。</li>
-<li>timxmprpc: <a target="_blank" rel="noopener" href="https://github.com/drtimcooper/XmlRpc4Win">https://github.com/drtimcooper/XmlRpc4Win</a><br>一款轻量的基于 C&#x2F;C++ 的 XML-RPC 库。</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/tonglin12138/article/details/103967711">https://blog.csdn.net/tonglin12138/article/details/103967711</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/staring-hxs/p/3202219.html">https://www.cnblogs.com/staring-hxs/p/3202219.html</a></li>
 </ul>
-<h1 id="2、Aria-通信机制"><a href="#2、Aria-通信机制" class="headerlink" title="2、Aria 通信机制"></a>2、Aria 通信机制</h1><p>Aria2 下载器具有较灵活的配置：全局配置，单文件配置。<br>其中，全局配置会覆盖默认参数并影响所有下载资源；单文件配置仅对指定文件生效。</p>
-<ul>
-<li>–continue: 当下载中断时，支持继续下载（append and then check）</li>
-<li>–auto-file-renaming&#x3D;false: 不支持重命名，即：相同文件会被覆盖</li>
-<li>–allow-override&#x3D;true: 当缺少控制文件时，重新下载</li>
-</ul>
-<p>同时，Aria2 支持通过 command-line 进行初始化，也支持通过 rpc 进行下载过程中的交互。</p>
-<ul>
-<li>aria2.tellStatus: 信息或状态查询</li>
-<li>aria2.addUri: 添加下载文件</li>
-<li>aria2.pasueAll: 暂停操作，比如：下载，校验等</li>
-<li>aria2.unpauseAll: 取消暂停操作</li>
-<li>aria2.getVersion: 获取 aria 版本</li>
-</ul>
-<h1 id="3、注意事项"><a href="#3、注意事项" class="headerlink" title="3、注意事项"></a>3、注意事项</h1><ul>
-<li>IPC通信：多文件下载时，略显鸡肋。需要主动查询并统计，还要控制好频率。同时，需要注意 aria2 的 初始化状态（借助 aria2.getVersion 探测）</li>
-<li>下载进度：各种原因会造成进度回退，需要针对性处理（更新文件，继续上次下载等情况）</li>
-</ul>
+<p>注：上述链接对于顶层窗口，子窗口等术语的定义会存在出入，一切以 Windows App Development 为准。</p>
+<h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>to be continued…</p>
 
                 
               </div>
@@ -315,7 +312,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/C/" class="category-chain-item">C++</a>
+  <a href="/categories/Windows/" class="category-chain-item">Windows</a>
   
   
 
@@ -335,8 +332,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【杂项】Aria2- 基础应用（持续更新）</div>
-      <div>https://jalencui.com/2024/09/16/Aria2-CommonSence-1/</div>
+      <div>【杂项】Windows 异形窗体改造</div>
+      <div>https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/</div>
     </div>
     <div class="license-meta">
       
@@ -348,7 +345,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 16, 2024</div>
+          <div>September 17, 2024</div>
         </div>
       
       
@@ -380,18 +377,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/17/Windows-HeteroTypeWindow/" title="【杂项】Windows 异形窗体改造">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【杂项】Windows 异形窗体改造</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/07/Windows-DeviceIO/" title="Windows系列 -- 设备IO">
-                        <span class="hidden-mobile">Windows系列 -- 设备IO</span>
+                      <a href="/2024/09/16/Aria2-CommonSence-1/" title="【杂项】Aria2- 基础应用（持续更新）">
+                        <span class="hidden-mobile">【杂项】Aria2- 基础应用（持续更新）</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
