@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Aria2- 基础应用（持续更新）</title>
+    <link href="/2024/09/16/Aria2-CommonSence-1/"/>
+    <url>/2024/09/16/Aria2-CommonSence-1/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1、Aria-基础设施"><a href="#1、Aria-基础设施" class="headerlink" title="1、Aria 基础设施"></a>1、Aria 基础设施</h1><h3 id="Aria2-下载器"><a href="#Aria2-下载器" class="headerlink" title="Aria2 下载器"></a>Aria2 下载器</h3><p>Aria2 下载器支持多种 IPC 通信模式： JSON-RPC, XML-RPC。</p><h3 id="IPC-机制"><a href="#IPC-机制" class="headerlink" title="IPC 机制"></a>IPC 机制</h3><p>基于 Aria2 提供的 RPC 机制， 我们选择了 xmlrpc 作为进程间通信方式。xmlrpc 开源库多种多样， 比如：libmaia, timxmlrpc。</p><ul><li>libmaia: <a href="https://github.com/wiedi/libmaia">https://github.com/wiedi/libmaia</a><br>一款为 Qt 定制的 XML-RPC 库。</li><li>timxmprpc: <a href="https://github.com/drtimcooper/XmlRpc4Win">https://github.com/drtimcooper/XmlRpc4Win</a><br>一款轻量的基于 C&#x2F;C++ 的 XML-RPC 库。</li></ul><h1 id="2、Aria-通信机制"><a href="#2、Aria-通信机制" class="headerlink" title="2、Aria 通信机制"></a>2、Aria 通信机制</h1><p>Aria2 下载器具有较灵活的配置：全局配置，单文件配置。<br>其中，全局配置会覆盖默认参数并影响所有下载资源；单文件配置仅对指定文件生效。</p><ul><li>–continue: 当下载中断时，支持继续下载（append and then check）</li><li>–auto-file-renaming&#x3D;false: 不支持重命名，即：相同文件会被覆盖</li><li>–allow-override&#x3D;true: 当缺少控制文件时，重新下载</li></ul><p>同时，Aria2 支持通过 command-line 进行初始化，也支持通过 rpc 进行下载过程中的交互。</p><ul><li>aria2.tellStatus: 信息或状态查询</li><li>aria2.addUri: 添加下载文件</li><li>aria2.pasueAll: 暂停操作，比如：下载，校验等</li><li>aria2.unpauseAll: 取消暂停操作</li><li>aria2.getVersion: 获取 aria 版本</li></ul><h1 id="3、注意事项"><a href="#3、注意事项" class="headerlink" title="3、注意事项"></a>3、注意事项</h1><ul><li>IPC通信：多文件下载时，略显鸡肋。需要主动查询并统计，还要控制好频率。同时，需要注意 aria2 的 初始化状态（借助 aria2.getVersion 探测）</li><li>下载进度：各种原因会造成进度回退，需要针对性处理（更新文件，继续上次下载等情况）</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Windows系列 -- 设备IO</title>
     <link href="/2024/04/07/Windows-DeviceIO/"/>
     <url>/2024/04/07/Windows-DeviceIO/</url>
