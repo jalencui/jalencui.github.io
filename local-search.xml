@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Vidwo系列 -- 性能优化方案调研</title>
+    <link href="/2025/01/11/Video-PerformanceOptimize-Solution/"/>
+    <url>/2025/01/11/Video-PerformanceOptimize-Solution/</url>
+    
+    <content type="html"><![CDATA[<h1 id="整体方案思路"><a href="#整体方案思路" class="headerlink" title="整体方案思路"></a>整体方案思路</h1><h2 id="vlc调研"><a href="#vlc调研" class="headerlink" title="vlc调研"></a>vlc调研</h2><p>vlc组件支持两种视频播放模式：渲染至窗口，渲染至图片。</p><ul><li>渲染至窗口：<ul><li>对于windows原生开发来说，《渲染至窗口》的整体流程更简洁。同时，也丧失了一定的灵活性。比如：视频帧的后处理。</li><li>对于qt开发来说，《渲染至窗口》需要获取qt空间的窗口句柄winId。但是，winId会导致窗口继承链中的事件处理中断。</li></ul></li><li>渲染至图片：<ul><li>相对比较灵活，通用的方式，它不受具体开发框架的限制。</li></ul></li></ul><h2 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h2><ul><li>原生控件 – 单纹理绘制：既支持 <span style="color:red">渲染至窗口</span>，也支持渲染至图片</li><li>原生控件 – 多纹理绘制：需要与指定的视频帧进行alpha混合（其它纹理即蒙层等）， <span style="color:red">“不支持渲染至窗口”</span></li><li>原生控件 – qml 绘制：需要提供视频帧， <span style="color:red">“不支持渲染至窗口”</span></li><li>H5控件 – 单纹理绘制： 无需额外解码，仅视频帧渲染流程需要优化</li></ul><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>桌面应用开发基本上会涉及音视频播放：原生视频播放，H5视频播放。</p><h1 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h1><ul><li>原生：视频帧渲染环节，视频解码环节</li><li>H5: 视频帧渲染环节</li></ul><h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>方向1：Qt 开发框架下，有三种图片渲染：QWidget::paint, QML::Image, QOpenGLWidget。其中，QOpenGLWidget提供了多种方式。我们采用它的opengl渲染流程 <b>（原生+H5）</b></p><p><del><span style="color:red">方向2（V1）：使用第三方组件库vlc，重构端内的视频解码+渲染流程，即：直接将视频帧渲染至指定窗口  <b>（仅原生）</b></span></del></p><p><del><span style="color:red">方向2（V2）: 使用第三方组件库vlc，重构端内的视频解码流程，即：vlc作为独立进程负责解码并输出纹理texture2d。最终的渲染操作依赖方向1的实现 <b>（仅原生）</b></span></del></p><p>方向2（终版）：使用第三方组件库vlc，重构端内的视频解码实现，即：vlc作为库形式嵌入应用。通过vlc回调实时刷新视频帧，并由方向1的渲染流程负责最终显示 <b>（仅原生）</b></span></p><p><img src="/2025/01/11/Video-PerformanceOptimize-Solution/Video_PerformanceOpt.drawio.png"></p><p><del><span style="color:red">向3：现有CEF3采用OSR渲染模式, 除了方向1提及的opengl渲染外，我们可选CEF提供的非OSR渲染模式。即：子窗口和弹窗模式<b>（仅H5）方案不可行</b><span></del></p><h1 id="实现（方向2）"><a href="#实现（方向2）" class="headerlink" title="实现（方向2）"></a>实现（方向2）</h1><p>从播放器的角度，音视频仅需仅需1份ffmpeg解码，1份视频帧渲染。具体如下：<br><img src="/2025/01/11/Video-PerformanceOptimize-Solution/Video_PlaybackFramework.drawio.png"></p><h1 id="业务相关"><a href="#业务相关" class="headerlink" title="业务相关"></a>业务相关</h1><p>桌面应用开发中，音视频播放流程基本上要兼顾通用播放器的大部分功能：</p><ul><li>音视频控制逻辑：支持暂停，继续，销毁</li><li>音视频切换逻辑：需要支持不同视频的切换等</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Video</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>【杂项】Windows 异形窗体改造</title>
     <link href="/2024/09/17/Windows-HeteroTypeWindow/"/>
     <url>/2024/09/17/Windows-HeteroTypeWindow/</url>

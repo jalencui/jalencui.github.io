@@ -16,21 +16,24 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
+    <meta name="description" content="整体方案思路vlc调研vlc组件支持两种视频播放模式：渲染至窗口，渲染至图片。  渲染至窗口： 对于windows原生开发来说，《渲染至窗口》的整体流程更简洁。同时，也丧失了一定的灵活性。比如：视频帧的后处理。 对于qt开发来说，《渲染至窗口》需要获取qt空间的窗口句柄winId。但是，winId会导致窗口继承链中的事件处理中断。   渲染至图片： 相对比较灵活，通用的方式，它不受具体开发框架的限">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【杂项】Windows 异形窗体改造">
-<meta property="og:url" content="https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/index.html">
+<meta property="og:title" content="Vidwo系列 -- 性能优化方案调研">
+<meta property="og:url" content="https://jalencui.com/2025/01/11/Video-PerformanceOptimize-Solution/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
+<meta property="og:description" content="整体方案思路vlc调研vlc组件支持两种视频播放模式：渲染至窗口，渲染至图片。  渲染至窗口： 对于windows原生开发来说，《渲染至窗口》的整体流程更简洁。同时，也丧失了一定的灵活性。比如：视频帧的后处理。 对于qt开发来说，《渲染至窗口》需要获取qt空间的窗口句柄winId。但是，winId会导致窗口继承链中的事件处理中断。   渲染至图片： 相对比较灵活，通用的方式，它不受具体开发框架的限">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-09-16T16:05:00.000Z">
-<meta property="article:modified_time" content="2024-09-16T16:36:55.526Z">
+<meta property="og:image" content="https://jalencui.com/2025/01/11/Video-PerformanceOptimize-Solution/Video_PerformanceOpt.drawio.png">
+<meta property="og:image" content="https://jalencui.com/2025/01/11/Video-PerformanceOptimize-Solution/Video_PlaybackFramework.drawio.png">
+<meta property="article:published_time" content="2025-01-11T05:19:00.000Z">
+<meta property="article:modified_time" content="2025-01-11T06:34:07.842Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jalencui.com/2025/01/11/Video-PerformanceOptimize-Solution/Video_PerformanceOpt.drawio.png">
   
   
   
-  <title>【杂项】Windows 异形窗体改造 - Jalen&#39;s Blog</title>
+  <title>Vidwo系列 -- 性能优化方案调研 - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【杂项】Windows 异形窗体改造"></span>
+            <span id="subtitle" data-typed-text="Vidwo系列 -- 性能优化方案调研"></span>
           
         </div>
 
@@ -207,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-17 00:05" pubdate>
-          September 17, 2024 am
+        <time datetime="2025-01-11 13:19" pubdate>
+          January 11, 2025 pm
         </time>
       </span>
     
@@ -219,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          993 words
+          929 words
         
       </span>
     
@@ -230,7 +233,7 @@
         
         
         
-          9 mins
+          8 mins
         
       </span>
     
@@ -268,32 +271,46 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【杂项】Windows 异形窗体改造</h1>
+            <h1 style="display: none">Vidwo系列 -- 性能优化方案调研</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h1><p>Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。</p>
-<h1 id="二、技术点"><a href="#二、技术点" class="headerlink" title="二、技术点"></a>二、技术点</h1><h3 id="技术点1：异形窗体"><a href="#技术点1：异形窗体" class="headerlink" title="技术点1：异形窗体"></a>技术点1：异形窗体</h3><p>使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。</p>
-<h3 id="技术点2：鼠标穿透至桌面"><a href="#技术点2：鼠标穿透至桌面" class="headerlink" title="技术点2：鼠标穿透至桌面"></a>技术点2：鼠标穿透至桌面</h3><p>鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。</p>
-<h3 id="技术点3：-窗体缩放"><a href="#技术点3：-窗体缩放" class="headerlink" title="技术点3： 窗体缩放"></a>技术点3： 窗体缩放</h3><ul>
-<li>窗体样式： WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_MINIMIZEBOX</li>
-<li>鼠标输入通知： WM_NCHITTEST 是鼠标时间的入口。其返回值：HTCAPTION, HTTOP, HTTOPRIGHT…</li>
-<li>窗体通知： WM_SIZING | WM_MOVING | WM_ENTERSIZEMVOE | WM_EXITSIZEMOVE | WM_GETMINMAXINFO | WM_NCLBUTTONDBLCLK | WM_NCCALCSIZE</li>
-</ul>
-<p>注：本部分仅列出实现功能所涉及的 window style, window notifications 和 window messages.</p>
-<h1 id="三、-疑难点"><a href="#三、-疑难点" class="headerlink" title="三、 疑难点"></a>三、 疑难点</h1><h3 id="疑难点1：-桌面顶部停靠"><a href="#疑难点1：-桌面顶部停靠" class="headerlink" title="疑难点1： 桌面顶部停靠"></a>疑难点1： 桌面顶部停靠</h3><p>当窗口移动时，顶部透明区域需要被裁剪：WM_MOVING, WM_EXITSIZEMOVE</p>
-<h3 id="疑难点2：-裁剪与缩放的冲突"><a href="#疑难点2：-裁剪与缩放的冲突" class="headerlink" title="疑难点2： 裁剪与缩放的冲突"></a>疑难点2： 裁剪与缩放的冲突</h3><p>当窗体缩放时，需要取消裁剪操作以避免窗体抖动：WM_SIZING | WM_NCCALCSIZE | WM_NCHITTEST </p>
-<h3 id="疑难点3：-跨屏窗体异常"><a href="#疑难点3：-跨屏窗体异常" class="headerlink" title="疑难点3： 跨屏窗体异常"></a>疑难点3： 跨屏窗体异常</h3><p>当拖动窗体跨越具有不同 DPI 的屏幕时，需要刷新窗口：WM_ENTERSIZEMOVE | WM_EXITSIZEMOVE | QWindow::screenChanged</p>
-<p>注：本部分仅列出解决问题需要的 window notifications 和 一些接口。</p>
-<h1 id="四、剖析"><a href="#四、剖析" class="headerlink" title="四、剖析"></a>四、剖析</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本部分仅对 1 例疑难点处理作简要分析，其它同理。</p>
-<h3 id="基本常识"><a href="#基本常识" class="headerlink" title="基本常识"></a>基本常识</h3><p>windows 桌面窗口控制着所有顶层窗口的行为。本部分不再重复介绍，有以下链接可参考</p>
+                <h1 id="整体方案思路"><a href="#整体方案思路" class="headerlink" title="整体方案思路"></a>整体方案思路</h1><h2 id="vlc调研"><a href="#vlc调研" class="headerlink" title="vlc调研"></a>vlc调研</h2><p>vlc组件支持两种视频播放模式：渲染至窗口，渲染至图片。</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/tonglin12138/article/details/103967711">https://blog.csdn.net/tonglin12138/article/details/103967711</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/staring-hxs/p/3202219.html">https://www.cnblogs.com/staring-hxs/p/3202219.html</a></li>
+<li>渲染至窗口：<ul>
+<li>对于windows原生开发来说，《渲染至窗口》的整体流程更简洁。同时，也丧失了一定的灵活性。比如：视频帧的后处理。</li>
+<li>对于qt开发来说，《渲染至窗口》需要获取qt空间的窗口句柄winId。但是，winId会导致窗口继承链中的事件处理中断。</li>
 </ul>
-<p>注：上述链接对于顶层窗口，子窗口等术语的定义会存在出入，一切以 Windows App Development 为准。</p>
-<h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>to be continued…</p>
+</li>
+<li>渲染至图片：<ul>
+<li>相对比较灵活，通用的方式，它不受具体开发框架的限制。</li>
+</ul>
+</li>
+</ul>
+<h2 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h2><ul>
+<li>原生控件 – 单纹理绘制：既支持 <span style="color:red">渲染至窗口</span>，也支持渲染至图片</li>
+<li>原生控件 – 多纹理绘制：需要与指定的视频帧进行alpha混合（其它纹理即蒙层等）， <span style="color:red">“不支持渲染至窗口”</span></li>
+<li>原生控件 – qml 绘制：需要提供视频帧， <span style="color:red">“不支持渲染至窗口”</span></li>
+<li>H5控件 – 单纹理绘制： 无需额外解码，仅视频帧渲染流程需要优化</li>
+</ul>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>桌面应用开发基本上会涉及音视频播放：原生视频播放，H5视频播放。</p>
+<h1 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h1><ul>
+<li>原生：视频帧渲染环节，视频解码环节</li>
+<li>H5: 视频帧渲染环节</li>
+</ul>
+<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>方向1：Qt 开发框架下，有三种图片渲染：QWidget::paint, QML::Image, QOpenGLWidget。其中，QOpenGLWidget提供了多种方式。我们采用它的opengl渲染流程 <b>（原生+H5）</b></p>
+<p><del><span style="color:red">方向2（V1）：使用第三方组件库vlc，重构端内的视频解码+渲染流程，即：直接将视频帧渲染至指定窗口  <b>（仅原生）</b></span></del></p>
+<p><del><span style="color:red">方向2（V2）: 使用第三方组件库vlc，重构端内的视频解码流程，即：vlc作为独立进程负责解码并输出纹理texture2d。最终的渲染操作依赖方向1的实现 <b>（仅原生）</b></span></del></p>
+<p>方向2（终版）：使用第三方组件库vlc，重构端内的视频解码实现，即：vlc作为库形式嵌入应用。通过vlc回调实时刷新视频帧，并由方向1的渲染流程负责最终显示 <b>（仅原生）</b></span></p>
+<p><img src="/2025/01/11/Video-PerformanceOptimize-Solution/Video_PerformanceOpt.drawio.png" srcset="/img/loading.gif" lazyload></p>
+<p><del><span style="color:red">向3：现有CEF3采用OSR渲染模式, 除了方向1提及的opengl渲染外，我们可选CEF提供的非OSR渲染模式。即：子窗口和弹窗模式<b>（仅H5）方案不可行</b><span></del></p>
+<h1 id="实现（方向2）"><a href="#实现（方向2）" class="headerlink" title="实现（方向2）"></a>实现（方向2）</h1><p>从播放器的角度，音视频仅需仅需1份ffmpeg解码，1份视频帧渲染。具体如下：<br><img src="/2025/01/11/Video-PerformanceOptimize-Solution/Video_PlaybackFramework.drawio.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="业务相关"><a href="#业务相关" class="headerlink" title="业务相关"></a>业务相关</h1><p>桌面应用开发中，音视频播放流程基本上要兼顾通用播放器的大部分功能：</p>
+<ul>
+<li>音视频控制逻辑：支持暂停，继续，销毁</li>
+<li>音视频切换逻辑：需要支持不同视频的切换等</li>
+</ul>
 
                 
               </div>
@@ -312,7 +329,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Windows/" class="category-chain-item">Windows</a>
+  <a href="/categories/Video/" class="category-chain-item">Video</a>
   
   
 
@@ -332,8 +349,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【杂项】Windows 异形窗体改造</div>
-      <div>https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/</div>
+      <div>Vidwo系列 -- 性能优化方案调研</div>
+      <div>https://jalencui.com/2025/01/11/Video-PerformanceOptimize-Solution/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +362,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 17, 2024</div>
+          <div>January 11, 2025</div>
         </div>
       
       
@@ -377,18 +394,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/11/Video-PerformanceOptimize-Solution/" title="Vidwo系列 -- 性能优化方案调研">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Vidwo系列 -- 性能优化方案调研</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/09/16/Aria2-CommonSence-1/" title="【杂项】Aria2- 基础应用（持续更新）">
-                        <span class="hidden-mobile">【杂项】Aria2- 基础应用（持续更新）</span>
+                      <a href="/2024/09/17/Windows-HeteroTypeWindow/" title="【杂项】Windows 异形窗体改造">
+                        <span class="hidden-mobile">【杂项】Windows 异形窗体改造</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
