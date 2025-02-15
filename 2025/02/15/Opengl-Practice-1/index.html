@@ -16,21 +16,21 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
+    <meta name="description" content="张三丰：“无忌，我教你的还记得多少？”张无忌：“回太师傅，我只记得一大半。”…张三丰：“那现在呢？”张无忌：“已经剩下一小半了。”…张三丰：“那现在呢？”张无忌：“我已经把所有的全忘记了。” 前置知识科普部分对相关概念一带而过。但对新同学至关重要 – 避免在庞杂的书面知识上浪费时间。技术选型部分对相关技术仅给出当前考量 – 方向是对的，剩下的就是工作量。技术细节部分对相关技术细节的设计作详细阐述">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【杂项】Windows 异形窗体改造">
-<meta property="og:url" content="https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/index.html">
+<meta property="og:title" content="OpenGL 系列 -- 渲染性能优化随记">
+<meta property="og:url" content="https://jalencui.com/2025/02/15/Opengl-Practice-1/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、需求背景Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。 二、技术点技术点1：异形窗体使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。 技术点2：鼠标穿透至桌面鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。 技术点3： 窗体缩放 窗">
+<meta property="og:description" content="张三丰：“无忌，我教你的还记得多少？”张无忌：“回太师傅，我只记得一大半。”…张三丰：“那现在呢？”张无忌：“已经剩下一小半了。”…张三丰：“那现在呢？”张无忌：“我已经把所有的全忘记了。” 前置知识科普部分对相关概念一带而过。但对新同学至关重要 – 避免在庞杂的书面知识上浪费时间。技术选型部分对相关技术仅给出当前考量 – 方向是对的，剩下的就是工作量。技术细节部分对相关技术细节的设计作详细阐述">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-09-16T16:05:00.000Z">
-<meta property="article:modified_time" content="2024-09-16T16:36:55.526Z">
+<meta property="article:published_time" content="2025-02-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-15T04:22:18.621Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>【杂项】Windows 异形窗体改造 - Jalen&#39;s Blog</title>
+  <title>OpenGL 系列 -- 渲染性能优化随记 - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【杂项】Windows 异形窗体改造"></span>
+            <span id="subtitle" data-typed-text="OpenGL 系列 -- 渲染性能优化随记"></span>
           
         </div>
 
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-17 00:05" pubdate>
-          September 17, 2024 am
+        <time datetime="2025-02-15 00:00" pubdate>
+          February 15, 2025 am
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          993 words
+          3.3k words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          9 mins
+          28 mins
         
       </span>
     
@@ -268,32 +268,97 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【杂项】Windows 异形窗体改造</h1>
+            <h1 style="display: none">OpenGL 系列 -- 渲染性能优化随记</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h1><p>Windows 客户端需要支持非规则窗体的视觉效果。同时，需要保留窗口的缩放、鼠标穿透、跨屏拖放等交互效果。</p>
-<h1 id="二、技术点"><a href="#二、技术点" class="headerlink" title="二、技术点"></a>二、技术点</h1><h3 id="技术点1：异形窗体"><a href="#技术点1：异形窗体" class="headerlink" title="技术点1：异形窗体"></a>技术点1：异形窗体</h3><p>使用透明控件扩充主窗口四周，以达到不规则图形超出客户区而不被裁剪的目的。同时，能保证窗口不受因缩放造成的抖动或闪烁。</p>
-<h3 id="技术点2：鼠标穿透至桌面"><a href="#技术点2：鼠标穿透至桌面" class="headerlink" title="技术点2：鼠标穿透至桌面"></a>技术点2：鼠标穿透至桌面</h3><p>鼠标穿透可借助透明区域裁剪操作。其中，区域计算涉及布尔运算，图片掩码等图形学操作。</p>
-<h3 id="技术点3：-窗体缩放"><a href="#技术点3：-窗体缩放" class="headerlink" title="技术点3： 窗体缩放"></a>技术点3： 窗体缩放</h3><ul>
-<li>窗体样式： WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_MINIMIZEBOX</li>
-<li>鼠标输入通知： WM_NCHITTEST 是鼠标时间的入口。其返回值：HTCAPTION, HTTOP, HTTOPRIGHT…</li>
-<li>窗体通知： WM_SIZING | WM_MOVING | WM_ENTERSIZEMVOE | WM_EXITSIZEMOVE | WM_GETMINMAXINFO | WM_NCLBUTTONDBLCLK | WM_NCCALCSIZE</li>
+                <p>张三丰：“无忌，我教你的还记得多少？”<br>张无忌：“回太师傅，我只记得一大半。”<br>…<br>张三丰：“那现在呢？”<br>张无忌：“已经剩下一小半了。”<br>…<br>张三丰：“那现在呢？”<br>张无忌：“我已经把所有的全忘记了。”</p>
+<h1 id="前置"><a href="#前置" class="headerlink" title="前置"></a>前置</h1><p>知识科普部分对相关概念一带而过。但对新同学至关重要 – 避免在庞杂的书面知识上浪费时间。<br>技术选型部分对相关技术仅给出当前考量 – 方向是对的，剩下的就是工作量。<br>技术细节部分对相关技术细节的设计作详细阐述 – 浪费您的时间了。</p>
+<h1 id="知识科普"><a href="#知识科普" class="headerlink" title="知识科普"></a>知识科普</h1><p>本文提及渲染时，统一默认为 OpenGL(或OpenGL ES) 和它的 GLSL。同时，文中尽量减少不必要的专业名词或术语。</p>
+<h2 id="什么是-OpenGL"><a href="#什么是-OpenGL" class="headerlink" title="什么是 OpenGL?"></a>什么是 OpenGL?</h2><p>请从状态机的角度，去理解它。<br>请从客户机&#x2F;服务器的角度，去理解它。</p>
+<h2 id="什么是-OpenGL-1"><a href="#什么是-OpenGL-1" class="headerlink" title="什么是 OpenGL?"></a>什么是 OpenGL?</h2><p>如果从 OpenGL 以什么方式完成什么事情的角度，更愿意把它看作一个“建模大师” –（拿来用而已）</p>
+<h3 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h3><p>提及 RGB, 大多数人习以为常。<br>提及 BGR，OpenCV开发人员比较熟悉（默认颜色空间）。<br>至于其他的颜色空间，也只是表示方式不同。颜色处理时，99%的情况要转为 RGB 三成分。数据传输时，按需转为其他格式。</p>
+<h4 id="在解码时，要输出哪种格式？"><a href="#在解码时，要输出哪种格式？" class="headerlink" title="在解码时，要输出哪种格式？"></a>在解码时，要输出哪种格式？</h4><p>这是数据源要关注的点。如果从渲染的角度判断，那就是：当前显卡驱动支持的最优格式。</p>
+<h4 id="对于渲染链路中的数据，要注意什么？"><a href="#对于渲染链路中的数据，要注意什么？" class="headerlink" title="对于渲染链路中的数据，要注意什么？"></a>对于渲染链路中的数据，要注意什么？</h4><ul>
+<li>尽量保持数据大小和数据格式不变，以减少格式转换带来的额外开销。</li>
+<li>尽量通过代码设计避免数据copy，以减少不必要的开销。</li>
+<li>尽量拥抱新知识，将耗时操作从 CPU 转移到 GPU。</li>
 </ul>
-<p>注：本部分仅列出实现功能所涉及的 window style, window notifications 和 window messages.</p>
-<h1 id="三、-疑难点"><a href="#三、-疑难点" class="headerlink" title="三、 疑难点"></a>三、 疑难点</h1><h3 id="疑难点1：-桌面顶部停靠"><a href="#疑难点1：-桌面顶部停靠" class="headerlink" title="疑难点1： 桌面顶部停靠"></a>疑难点1： 桌面顶部停靠</h3><p>当窗口移动时，顶部透明区域需要被裁剪：WM_MOVING, WM_EXITSIZEMOVE</p>
-<h3 id="疑难点2：-裁剪与缩放的冲突"><a href="#疑难点2：-裁剪与缩放的冲突" class="headerlink" title="疑难点2： 裁剪与缩放的冲突"></a>疑难点2： 裁剪与缩放的冲突</h3><p>当窗体缩放时，需要取消裁剪操作以避免窗体抖动：WM_SIZING | WM_NCCALCSIZE | WM_NCHITTEST </p>
-<h3 id="疑难点3：-跨屏窗体异常"><a href="#疑难点3：-跨屏窗体异常" class="headerlink" title="疑难点3： 跨屏窗体异常"></a>疑难点3： 跨屏窗体异常</h3><p>当拖动窗体跨越具有不同 DPI 的屏幕时，需要刷新窗口：WM_ENTERSIZEMOVE | WM_EXITSIZEMOVE | QWindow::screenChanged</p>
-<p>注：本部分仅列出解决问题需要的 window notifications 和 一些接口。</p>
-<h1 id="四、剖析"><a href="#四、剖析" class="headerlink" title="四、剖析"></a>四、剖析</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本部分仅对 1 例疑难点处理作简要分析，其它同理。</p>
-<h3 id="基本常识"><a href="#基本常识" class="headerlink" title="基本常识"></a>基本常识</h3><p>windows 桌面窗口控制着所有顶层窗口的行为。本部分不再重复介绍，有以下链接可参考</p>
+<h3 id="光照"><a href="#光照" class="headerlink" title="光照"></a>光照</h3><p>基础领域的研究成果，拿来用用而已（模拟现实是VR，增强现实是AR等）</p>
+<h4 id="对光源的划分"><a href="#对光源的划分" class="headerlink" title="对光源的划分"></a>对光源的划分</h4><p>光源划分本身就是一个建模的过程。比如：太阳光定义为平行光；白炽灯定义为点光源。</p>
+<h4 id="对光源成分的划分"><a href="#对光源成分的划分" class="headerlink" title="对光源成分的划分"></a>对光源成分的划分</h4><p>同样是一个建模的过程，比如：环境光，漫反射，高光反射等。</p>
+<h4 id="对光源成分建模"><a href="#对光源成分建模" class="headerlink" title="对光源成分建模"></a>对光源成分建模</h4><p>一堆计算公式而已，比如：Lambert模型， Half-Lambert模型， Phong模型，Blinne-Phong模型。建议忽略该部分，这是 TA 操心的事情。</p>
+<h3 id="坐标系"><a href="#坐标系" class="headerlink" title="坐标系"></a>坐标系</h3><p>无论是一场 AR 直播，一个复杂的游戏场景，或者一幅图片，在生动的视觉效果背后都存在一个摸不着的虚拟世界。虚拟世界的完整描述，依赖各类坐标系（左右手）：世界坐标系，模型坐标系，观察坐标系，裁剪坐标系。借助这些信息，渲染流水线得以完成各种变换（MVP）。</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/tonglin12138/article/details/103967711">https://blog.csdn.net/tonglin12138/article/details/103967711</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/staring-hxs/p/3202219.html">https://www.cnblogs.com/staring-hxs/p/3202219.html</a></li>
+<li>世界坐标系描述了所有模型和光源位置</li>
+<li>光照计算需要在模型坐标系下进行</li>
+<li>视图坐标系定义了相机的位姿，直接影响画面的输出</li>
+<li>裁剪坐标系是经过透视除法后的坐标系，设计正交投影和透视投影。其中，透视投影矩阵是对近大远小等透视效果的建模。</li>
 </ul>
-<p>注：上述链接对于顶层窗口，子窗口等术语的定义会存在出入，一切以 Windows App Development 为准。</p>
-<h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>to be continued…</p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>对人物或物体的建模，本质上就是描述其轮廓&#x2F;包络&#x2F;网格的过程。下面对一个模型文件进行分析：</p>
+<h4 id="准备环节"><a href="#准备环节" class="headerlink" title="准备环节"></a>准备环节</h4><p>通过资源网站下载或者 blender 生成模型文件。为避免展开话题，我们限定模型文件格式为 .obj。</p>
+<h4 id="格式定义"><a href="#格式定义" class="headerlink" title="格式定义"></a>格式定义</h4><p>mtllib 部分：忽略该部分（包含各种反射的参数信息，纹理文件信息等内容）<br>object 部分：必备参数（:v, :f），可选参数（:vt, :vn）。</p>
+<ul>
+<li>必备参数：顶点:v 和三角面:f 完整描述了物体的包络&#x2F;网格。</li>
+<li>可选参数：忽略该部分（纹理顶点:vt 描述了贴图的映射信息，顶点法线:vn 用于光照计算）</li>
+</ul>
+<h4 id="应用分析"><a href="#应用分析" class="headerlink" title="应用分析"></a>应用分析</h4><p>必备参数完整描述了模型的包络信息。可选参数算是辅助信息，比如：顶点法线用于光照计算（可在导入引擎时生成）；纹理顶点相当于物体&#x2F;人物贴图映射关系等等。</p>
+<ul>
+<li>对于 OpenGL 开发来说，控制如何绘制顶点是比较重要的一环。比如：<ul>
+<li>需要初始化 VBO 信息，也即顶点:v</li>
+<li>需要初始化 EBO 信息，也即顶点索引:f</li>
+<li>可能需要初始化 VAO，也即元数据。它描述各个 buffer 的数据存储信息（VBO，EBO）</li>
+<li>可能需要初始化 PBO，用于释放 glTextureSubImage2D 操作的 cpu 占用</li>
+</ul>
+</li>
+<li>对于引擎应用开发来说，更多的工作集中在 shader 及 shader 参数配置</li>
+</ul>
+<h2 id="什么是-OpenGL-2"><a href="#什么是-OpenGL-2" class="headerlink" title="什么是 OpenGL?"></a>什么是 OpenGL?</h2><p>请忘掉上述回复。对于常规 opengl 开发，它跟普通的库没有区别。只需要了解相关接口即可。</p>
+<ul>
+<li>非必要，不要引入 MVP。比如：视频帧渲染，如果默认 MVP 都是单位阵，试试有什么效果?</li>
+<li>非必要，不要接触光照，那是 TA 操心的内容。再者，视频帧渲染跟光照没有半毛钱关系。</li>
+<li>没必要接触模型。对于视频帧或者图片渲染来说，模型就是四个顶点（两个三角面&#x2F;一个四边面）。</li>
+</ul>
+<h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><h2 id="QT-技术栈"><a href="#QT-技术栈" class="headerlink" title="QT 技术栈"></a>QT 技术栈</h2><h3 id="qt-quick"><a href="#qt-quick" class="headerlink" title="qt quick"></a>qt quick</h3><p>不存在渲染性能问题，qt quick 默认采用 gpu 渲染。在禁用 gpu （qt::aa_usesoftwareopengl）的情况下，才会 fallback。</p>
+<h3 id="qt-qwidget"><a href="#qt-qwidget" class="headerlink" title="qt qwidget"></a>qt qwidget</h3><p>qwidget 是采用 gpu 渲染。如果想利用 gpu 的优势，需要借助 qopenglwidget 控件，并且需要大量的工作</p>
+<ul>
+<li>oepngl 版本控制： 兼容用户的显卡驱动版本<ul>
+<li>pbo 技术： gles 4.2, opengl 3.3 才得以支持</li>
+<li>gl_polygon 枚举：旧版本的参数在新版本已被舍弃</li>
+<li>shader 指令： gles 中 inout 参数需要提供精度信息</li>
+<li>…</li>
+</ul>
+</li>
+<li>fallback 操作：对于禁用 gpu 的场景，需要额外提供软渲作为兜底</li>
+<li>opengl 渲染：需要同时支持 opengl 和 gles</li>
+<li>软渲：用于 fallback 场景</li>
+</ul>
+<h2 id="QT-渲染属性"><a href="#QT-渲染属性" class="headerlink" title="QT 渲染属性"></a>QT 渲染属性</h2><h3 id="qt-aa-usedefault-qt-没有该枚举，用于占位"><a href="#qt-aa-usedefault-qt-没有该枚举，用于占位" class="headerlink" title="qt::aa_usedefault (qt 没有该枚举，用于占位)"></a>qt::aa_usedefault (qt 没有该枚举，用于占位)</h3><p>默认情况下， qt 会渲染当前显卡驱动的 opengl 版本，比如：4.6</p>
+<h3 id="qt-aa-useopengles"><a href="#qt-aa-useopengles" class="headerlink" title="qt::aa_useopengles"></a>qt::aa_useopengles</h3><p>当指定该渲染属性时，qt 会选择显卡驱动支持的 gles 版本，比如：2.0</p>
+<h3 id="qt-aa-usesoftwareopengl"><a href="#qt-aa-usesoftwareopengl" class="headerlink" title="qt::aa_usesoftwareopengl"></a>qt::aa_usesoftwareopengl</h3><p>当指定该渲染属性时，当前应用中的所有 ui 渲染都会 fallback</p>
+<h2 id="QT-渲染方式"><a href="#QT-渲染方式" class="headerlink" title="QT 渲染方式"></a>QT 渲染方式</h2><h3 id="paintevent-with-qpainter"><a href="#paintevent-with-qpainter" class="headerlink" title="paintevent(*) with qpainter"></a>paintevent(*) with qpainter</h3><p>qwidget 提供的渲染接口，也即上文的软渲。由于 qopenglwidget 是继承至 qwidget，所以需要实现该接口用于 fallback 场景</p>
+<h3 id="paintgl-with-qpainter"><a href="#paintgl-with-qpainter" class="headerlink" title="paintgl() with qpainter"></a>paintgl() with qpainter</h3><p>提供了灵活支持，可以使用一些非 opengl 指令。但该操作本身会占用 cpu</p>
+<h3 id="paintgl-with-opengl-commands"><a href="#paintgl-with-opengl-commands" class="headerlink" title="paintgl() with opengl commands"></a>paintgl() with opengl commands</h3><p>即是 opengl 渲染~</p>
+<h2 id="OpenGL-amp-Shader"><a href="#OpenGL-amp-Shader" class="headerlink" title="OpenGL &amp; Shader"></a>OpenGL &amp; Shader</h2><h3 id="opengl-与着色器-shader-是什么关系呢？"><a href="#opengl-与着色器-shader-是什么关系呢？" class="headerlink" title="opengl 与着色器 shader 是什么关系呢？"></a>opengl 与着色器 shader 是什么关系呢？</h3><p>对于 opengl 来说，glsl 算是一个辅助工具。借用《红宝书第七版》的描述： glsl 可以进一步发掘 OpenGL 的现代硬件实现的计算威力。 如果没有shader, 某些计算只能在 cpu 中进行。</p>
+<h3 id="不使用-shader，-opengl-可以完成常规渲染操作吗？"><a href="#不使用-shader，-opengl-可以完成常规渲染操作吗？" class="headerlink" title="不使用 shader， opengl 可以完成常规渲染操作吗？"></a>不使用 shader， opengl 可以完成常规渲染操作吗？</h3><p>对于引擎应用开发来说，不行。引擎应用开发唯一能操作的就是shader，他们无需关心 opengl 底层接口。<br>对于非引擎应用开发，shader 是一个可选项。多重纹理渲染那的场景：</p>
+<ul>
+<li>当纹理大小完全匹配时，单次 draw call 即可完成</li>
+<li>当纹理大小不完全匹配且某些纹理需要等比缩放（cover 模式）<ul>
+<li>opengl 实现： 使用独立的顶点和纹理映射，多次 draw call 即可完成（配合 blend separate）</li>
+<li>shader 实现： 多次 draw call 比较麻烦；单次 draw call 时，需要借助 cpu 完成对各个纹理进行缩放和平移</li>
+</ul>
+</li>
+</ul>
+<p>注：draw call 是引擎渲染中的术语。对于 opengl 开发，就是一次顶点接口调用，如：glDrawElements。</p>
+<h2 id="阅读推荐"><a href="#阅读推荐" class="headerlink" title="阅读推荐"></a>阅读推荐</h2><p>《OpenGL 红宝书第七版》：建议精读。后续接触新知识时，会更容易理解它们的由来。<br>《OpenGL 红宝书第九版》：大部分内容趋于同质化。只需了解最新的纹理及多重纹理内容即可。<br>《OpenGL ES 3.0 编程指南》：工具书，方便查询接口。</p>
+<h1 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h1><p>截至前两部分，本文基本上已经完成。代码是廉价的，偷懒不想再作详细介绍~~ bye</p>
+<ul>
+<li>1282 error: 参数错误。 opengl 不同版本会舍弃一些参数；</li>
+<li>1281 error: 接口报错，比如：pbo 映射内存时，没有进行 bind 操作；</li>
+<li>gltex<em>image</em> 接口：比较耗时哦。尽量合理利用；</li>
+<li>ffmpeg 解码：尽量借助帧间隔（sleep）完成对一阵纹理的提交，避免多余的内存 copy。</li>
+</ul>
 
                 
               </div>
@@ -312,7 +377,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Windows/" class="category-chain-item">Windows</a>
+  <a href="/categories/OpenGL/" class="category-chain-item">OpenGL</a>
   
   
 
@@ -332,8 +397,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【杂项】Windows 异形窗体改造</div>
-      <div>https://jalencui.com/2024/09/17/Windows-HeteroTypeWindow/</div>
+      <div>OpenGL 系列 -- 渲染性能优化随记</div>
+      <div>https://jalencui.com/2025/02/15/Opengl-Practice-1/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +410,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 17, 2024</div>
+          <div>February 15, 2025</div>
         </div>
       
       
@@ -377,18 +442,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/11/Video-PerformanceOptimize-Solution/" title="Video 系列 -- 性能优化方案调研">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Video 系列 -- 性能优化方案调研</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/09/16/Aria2-CommonSence-1/" title="【杂项】Aria2- 基础应用（持续更新）">
-                        <span class="hidden-mobile">【杂项】Aria2- 基础应用（持续更新）</span>
+                      <a href="/2025/01/11/Video-PerformanceOptimize-Solution/" title="Video 系列 -- 性能优化方案调研">
+                        <span class="hidden-mobile">Video 系列 -- 性能优化方案调研</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
