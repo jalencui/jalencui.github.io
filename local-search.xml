@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>cUI 系列 -- 规划</title>
+    <link href="/2025/10/09/cUI-planning/"/>
+    <url>/2025/10/09/cUI-planning/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p> cUI 将会是一款基于 win32 实现的 UI 框架。力求精简，即：最少依赖，最小包体体积。</p><h1 id="二、规划"><a href="#二、规划" class="headerlink" title="二、规划"></a>二、规划</h1><ul><li>任务栏托盘<br>桌面客户端的基础能力，包括：任务栏托盘图标，托盘右键菜单。</li><li>窗口绘制<br>桌面客户端的基础能力，包括：位图(bmp, png, jpg)，矢量图（svg），动图（gif, webp, lottie）。</li><li>桌面通知<br>桌面客户端的特殊能力。监于过于通用，那就把 windows SDK 的能力拿来剖析一下。</li><li>常规控件<br>桌面客户端的基础能力，包括：Button, COMBOBOX, EDIT, LISTBOX, MDICLIENT, RichEdit, SCROLLBAR等。</li><li>…</li></ul><h1 id="三、备注"><a href="#三、备注" class="headerlink" title="三、备注"></a>三、备注</h1><p>1、该系列不局限于某一开发语言。但，仅涉及 win32 接口和所有开发语言都具备的标准接口。<br>2、该系列仅提供客户端方面的基础能力。所以，图片解析，GDI绘制等特定技术栈不在讨论范围。<br>3、该系列的目标是实现一种 UI 框架，基础设施往往是最难的。所以，简单的示例也会涉及：线程，窗口，windows消息，定时器等。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>cUI</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>OpenGL 系列 -- 渲染性能优化随记</title>
     <link href="/2025/02/15/Opengl-Practice-1/"/>
     <url>/2025/02/15/Opengl-Practice-1/</url>
@@ -61,7 +80,7 @@
   
   
   <entry>
-    <title>【杂项】Aria2- 基础应用（持续更新）</title>
+    <title>【杂项】Aria2 - 基础应用（持续更新）</title>
     <link href="/2024/09/16/Aria2-CommonSence-1/"/>
     <url>/2024/09/16/Aria2-CommonSence-1/</url>
     
@@ -80,7 +99,7 @@
   
   
   <entry>
-    <title>Windows系列 -- 设备IO</title>
+    <title>Windows 系列 -- 设备IO</title>
     <link href="/2024/04/07/Windows-DeviceIO/"/>
     <url>/2024/04/07/Windows-DeviceIO/</url>
     
