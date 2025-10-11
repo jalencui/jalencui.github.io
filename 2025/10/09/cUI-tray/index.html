@@ -16,21 +16,21 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、简介 cUI 将会是一款基于 win32 实现的 UI 框架。力求精简，即：最少依赖，最小包体体积。 二、规划 任务栏托盘桌面客户端的基础能力，包括：任务栏托盘图标，托盘右键菜单。 窗口绘制桌面客户端的基础能力，包括：位图(bmp, png, jpg)，矢量图（svg），动图（gif, webp, lottie）。 桌面通知桌面客户端的特殊能力。监于过于通用，那就把 windows SDK 的">
+    <meta name="description" content="一、应用场景常规的桌面端后台应用程序：没有通俗意义上的 UI 线程。此时，它需要一个任务栏图标。 二、客户端构成鉴于系列首篇，额外插入该环节。  物理载体：窗口，比如：windows 中的 win32 窗口。 逻辑载体：“UI 线程” 和它的消息队列，用于维护或者共享当前的输入状态，比如：键盘状态，焦点窗口。 消息循环：用于处理属于 “UI 线程” 的所有消息。  三、问答鉴于系列首篇，额外插入该">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cUI 系列 -- 规划">
-<meta property="og:url" content="https://jalencui.com/2025/10/09/cUI-planning/index.html">
+<meta property="og:title" content="cUI 系列 -- 任务栏托盘">
+<meta property="og:url" content="https://jalencui.com/2025/10/09/cUI-tray/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、简介 cUI 将会是一款基于 win32 实现的 UI 框架。力求精简，即：最少依赖，最小包体体积。 二、规划 任务栏托盘桌面客户端的基础能力，包括：任务栏托盘图标，托盘右键菜单。 窗口绘制桌面客户端的基础能力，包括：位图(bmp, png, jpg)，矢量图（svg），动图（gif, webp, lottie）。 桌面通知桌面客户端的特殊能力。监于过于通用，那就把 windows SDK 的">
+<meta property="og:description" content="一、应用场景常规的桌面端后台应用程序：没有通俗意义上的 UI 线程。此时，它需要一个任务栏图标。 二、客户端构成鉴于系列首篇，额外插入该环节。  物理载体：窗口，比如：windows 中的 win32 窗口。 逻辑载体：“UI 线程” 和它的消息队列，用于维护或者共享当前的输入状态，比如：键盘状态，焦点窗口。 消息循环：用于处理属于 “UI 线程” 的所有消息。  三、问答鉴于系列首篇，额外插入该">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-10-09T02:42:00.000Z">
-<meta property="article:modified_time" content="2025-10-09T04:13:08.201Z">
+<meta property="article:published_time" content="2025-10-09T08:01:00.000Z">
+<meta property="article:modified_time" content="2025-10-11T03:32:08.153Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>cUI 系列 -- 规划 - Jalen&#39;s Blog</title>
+  <title>cUI 系列 -- 任务栏托盘 - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="cUI 系列 -- 规划"></span>
+            <span id="subtitle" data-typed-text="cUI 系列 -- 任务栏托盘"></span>
           
         </div>
 
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-10-09 10:42" pubdate>
-          October 9, 2025 am
+        <time datetime="2025-10-09 16:01" pubdate>
+          October 9, 2025 pm
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          426 words
+          641 words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          4 mins
+          6 mins
         
       </span>
     
@@ -268,20 +268,31 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">cUI 系列 -- 规划</h1>
+            <h1 style="display: none">cUI 系列 -- 任务栏托盘</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p> cUI 将会是一款基于 win32 实现的 UI 框架。力求精简，即：最少依赖，最小包体体积。</p>
-<h1 id="二、规划"><a href="#二、规划" class="headerlink" title="二、规划"></a>二、规划</h1><ul>
-<li>任务栏托盘<br>桌面客户端的基础能力，包括：任务栏托盘图标，托盘右键菜单。</li>
-<li>窗口绘制<br>桌面客户端的基础能力，包括：位图(bmp, png, jpg)，矢量图（svg），动图（gif, webp, lottie）。</li>
-<li>桌面通知<br>桌面客户端的特殊能力。监于过于通用，那就把 windows SDK 的能力拿来剖析一下。</li>
-<li>常规控件<br>桌面客户端的基础能力，包括：Button, COMBOBOX, EDIT, LISTBOX, MDICLIENT, RichEdit, SCROLLBAR等。</li>
-<li>…</li>
+                <h1 id="一、应用场景"><a href="#一、应用场景" class="headerlink" title="一、应用场景"></a>一、应用场景</h1><p>常规的桌面端后台应用程序：没有通俗意义上的 UI 线程。此时，它需要一个任务栏图标。</p>
+<h1 id="二、客户端构成"><a href="#二、客户端构成" class="headerlink" title="二、客户端构成"></a>二、客户端构成</h1><p>鉴于系列首篇，额外插入该环节。</p>
+<ul>
+<li>物理载体：窗口，比如：windows 中的 win32 窗口。</li>
+<li>逻辑载体：“UI 线程” 和它的消息队列，用于维护或者共享当前的输入状态，比如：键盘状态，焦点窗口。</li>
+<li>消息循环：用于处理属于 “UI 线程” 的所有消息。</li>
 </ul>
-<h1 id="三、备注"><a href="#三、备注" class="headerlink" title="三、备注"></a>三、备注</h1><p>1、该系列不局限于某一开发语言。但，仅涉及 win32 接口和所有开发语言都具备的标准接口。<br>2、该系列仅提供客户端方面的基础能力。所以，图片解析，GDI绘制等特定技术栈不在讨论范围。<br>3、该系列的目标是实现一种 UI 框架，基础设施往往是最难的。所以，简单的示例也会涉及：线程，窗口，windows消息，定时器等。</p>
+<h1 id="三、问答"><a href="#三、问答" class="headerlink" title="三、问答"></a>三、问答</h1><p>鉴于系列首篇，额外插入该环节。</p>
+<ul>
+<li>什么是 “UI 线程”？<br>没有所谓的 “UI 线程”，它是所有非系统线程的代名词，也即：任何“用户线程”都可以作为 “UI 线程”。</li>
+<li>单进程可以拥有两个 “UI 线程”吗？<br>可以，没有理论上限。</li>
+<li>消息循环的转发机制？<br>系统队列 –&gt; 线程队列（Input Desktop） –&gt; 窗口过程。</li>
+<li>窗口与对话框的区别？<br>还真有区别，自行 deepseek 吧。对话框（非模态，窗口级模态，进程级模态）算是高度定制的窗口。同时，对话框拥有特定的创建接口，消息类型等。</li>
+</ul>
+<h1 id="四、参考代码"><a href="#四、参考代码" class="headerlink" title="四、参考代码"></a>四、参考代码</h1><h2 id="基础实现"><a href="#基础实现" class="headerlink" title="基础实现"></a>基础实现</h2><p>示例程序使用单独的线程，来维护消息窗口的消息循环。消息窗口的作用，如下所示：</p>
+<ul>
+<li>托盘图标：指定的父窗口可接收任务栏图标的交互事件。特定事件构成：自定义的托盘消息 &amp; lParam 参数。</li>
+<li>右键菜单：指定的父窗口可接收右键菜单的交互事件。特定事件构成：WM_COMMAND 消息 &amp; 自定义参数。</li>
+</ul>
+<h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。此 C# 代码也可以无缝转为 C&#x2F;C++ (无需 P&#x2F;Invoke, 更简单).<br><a target="_blank" rel="noopener" href="https://github.com/jalencui/cUI/tree/master/SystemTray"><strong>点我获取示例程序</strong></a></p>
 
                 
               </div>
@@ -320,8 +331,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>cUI 系列 -- 规划</div>
-      <div>https://jalencui.com/2025/10/09/cUI-planning/</div>
+      <div>cUI 系列 -- 任务栏托盘</div>
+      <div>https://jalencui.com/2025/10/09/cUI-tray/</div>
     </div>
     <div class="license-meta">
       
@@ -365,18 +376,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/10/09/cUI-tray/" title="cUI 系列 -- 任务栏托盘">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">cUI 系列 -- 任务栏托盘</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/15/Opengl-Practice-1/" title="OpenGL 系列 -- 渲染性能优化随记">
-                        <span class="hidden-mobile">OpenGL 系列 -- 渲染性能优化随记</span>
+                      <a href="/2025/10/09/cUI-planning/" title="cUI 系列 -- 规划">
+                        <span class="hidden-mobile">cUI 系列 -- 规划</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

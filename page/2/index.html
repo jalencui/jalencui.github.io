@@ -224,6 +224,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2023/09/16/SDK-Downlaoder-part2/" target="_self">
+          下载器 -- IPC 调研(备忘) -- 2024.09.15 旧稿发布
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/16/SDK-Downlaoder-part2/" target="_self">
+        <div>
+          一、需求对于自研下载器，我们可以直接复用 Aria2c 模块中的 XML-RPC 或者调研新的 IPC 通信。 二、现状端内集成的 Aria2c 下载器使用定制的 MaiaIPC 进行通信：http post。会存在一些问题：  Http 链接：N 组资源下载，需要在业务层维持 N 个 Http链接 状态查询：定时主动轮询，会存在 60% 以上的无效查询。 异常同步：强依赖状态查询。若不查询，则无
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-09-16 18:36" pubdate>
+              2023-09-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2023/09/15/SDK-Downloader-part1/" target="_self">
           下载器 -- 调试工具(备忘)
         </a>
@@ -689,60 +743,6 @@
       <span class="category-chain">
         
   <a href="/categories/AR/" class="category-chain-item">AR</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/08/QCef-Ime-JSInject/" target="_self">
-          [杂项] CEF3 -- IME Behavior
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/08/QCef-Ime-JSInject/" target="_self">
-        <div>
-          预备知识 Communications : between host and web Preloading: supported by Electron only Preload scripts are injected BEFORE a web page loads in the renderer, similar to a Chrome extension’s content scripts.
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-08 22:47" pubdate>
-              2023-03-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Cef/" class="category-chain-item">Cef</a>
   
   
 

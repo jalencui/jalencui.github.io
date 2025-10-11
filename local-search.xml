@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>cUI 系列 -- 任务栏托盘</title>
+    <link href="/2025/10/09/cUI-tray/"/>
+    <url>/2025/10/09/cUI-tray/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、应用场景"><a href="#一、应用场景" class="headerlink" title="一、应用场景"></a>一、应用场景</h1><p>常规的桌面端后台应用程序：没有通俗意义上的 UI 线程。此时，它需要一个任务栏图标。</p><h1 id="二、客户端构成"><a href="#二、客户端构成" class="headerlink" title="二、客户端构成"></a>二、客户端构成</h1><p>鉴于系列首篇，额外插入该环节。</p><ul><li>物理载体：窗口，比如：windows 中的 win32 窗口。</li><li>逻辑载体：“UI 线程” 和它的消息队列，用于维护或者共享当前的输入状态，比如：键盘状态，焦点窗口。</li><li>消息循环：用于处理属于 “UI 线程” 的所有消息。</li></ul><h1 id="三、问答"><a href="#三、问答" class="headerlink" title="三、问答"></a>三、问答</h1><p>鉴于系列首篇，额外插入该环节。</p><ul><li>什么是 “UI 线程”？<br>没有所谓的 “UI 线程”，它是所有非系统线程的代名词，也即：任何“用户线程”都可以作为 “UI 线程”。</li><li>单进程可以拥有两个 “UI 线程”吗？<br>可以，没有理论上限。</li><li>消息循环的转发机制？<br>系统队列 –&gt; 线程队列（Input Desktop） –&gt; 窗口过程。</li><li>窗口与对话框的区别？<br>还真有区别，自行 deepseek 吧。对话框（非模态，窗口级模态，进程级模态）算是高度定制的窗口。同时，对话框拥有特定的创建接口，消息类型等。</li></ul><h1 id="四、参考代码"><a href="#四、参考代码" class="headerlink" title="四、参考代码"></a>四、参考代码</h1><h2 id="基础实现"><a href="#基础实现" class="headerlink" title="基础实现"></a>基础实现</h2><p>示例程序使用单独的线程，来维护消息窗口的消息循环。消息窗口的作用，如下所示：</p><ul><li>托盘图标：指定的父窗口可接收任务栏图标的交互事件。特定事件构成：自定义的托盘消息 &amp; lParam 参数。</li><li>右键菜单：指定的父窗口可接收右键菜单的交互事件。特定事件构成：WM_COMMAND 消息 &amp; 自定义参数。</li></ul><h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。此 C# 代码也可以无缝转为 C&#x2F;C++ (无需 P&#x2F;Invoke, 更简单).<br><a href="https://github.com/jalencui/cUI/tree/master/SystemTray"><strong>点我获取示例程序</strong></a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>cUI</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>cUI 系列 -- 规划</title>
     <link href="/2025/10/09/cUI-planning/"/>
     <url>/2025/10/09/cUI-planning/</url>
