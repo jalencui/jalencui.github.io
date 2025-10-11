@@ -24,7 +24,7 @@
 <meta property="og:description" content="张三丰：“无忌，我教你的还记得多少？”张无忌：“回太师傅，我只记得一大半。”…张三丰：“那现在呢？”张无忌：“已经剩下一小半了。”…张三丰：“那现在呢？”张无忌：“我已经把所有的全忘记了。” 前置知识科普部分对相关概念一带而过。但对新同学至关重要 – 避免在庞杂的书面知识上浪费时间。技术选型部分对相关技术仅给出当前考量 – 方向是对的，剩下的就是工作量。技术细节部分对相关技术细节的设计作详细阐述">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-02-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-02-15T04:22:18.621Z">
+<meta property="article:modified_time" content="2025-10-11T03:51:30.990Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -321,7 +321,7 @@
 <li>没必要接触模型。对于视频帧或者图片渲染来说，模型就是四个顶点（两个三角面&#x2F;一个四边面）。</li>
 </ul>
 <h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><h2 id="QT-技术栈"><a href="#QT-技术栈" class="headerlink" title="QT 技术栈"></a>QT 技术栈</h2><h3 id="qt-quick"><a href="#qt-quick" class="headerlink" title="qt quick"></a>qt quick</h3><p>不存在渲染性能问题，qt quick 默认采用 gpu 渲染。在禁用 gpu （qt::aa_usesoftwareopengl）的情况下，才会 fallback。</p>
-<h3 id="qt-qwidget"><a href="#qt-qwidget" class="headerlink" title="qt qwidget"></a>qt qwidget</h3><p>qwidget 是采用 gpu 渲染。如果想利用 gpu 的优势，需要借助 qopenglwidget 控件，并且需要大量的工作</p>
+<h3 id="qt-qwidget"><a href="#qt-qwidget" class="headerlink" title="qt qwidget"></a>qt qwidget</h3><p>qwidget 是采用 cpu 渲染。如果想利用 gpu 的优势，需要借助 qopenglwidget 控件，并且需要大量的工作</p>
 <ul>
 <li>oepngl 版本控制： 兼容用户的显卡驱动版本<ul>
 <li>pbo 技术： gles 4.2, opengl 3.3 才得以支持</li>
