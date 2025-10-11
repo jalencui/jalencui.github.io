@@ -16,15 +16,15 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景桌面端开发中，会有使用到 Webview 的场景。当有视频播放需求时，需要本地构建带有自定义开关的 CEF。由于版权限制，CEF官方提供的库文件并不支持该动能。如果桌面客户端使用的时 Qt, Qt WebEngine 也是不支持的哦。相较于 QWebEngine，我们通常会选择灵活性更大的 CEF。截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF">
+    <meta name="description" content="一、背景由于版权限制，CEF官方提供的库文件并不支持视频解码功能。截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF 的所有版本号，博主通常有两种划分方式： 方式一： Supported Branches: 官方维护的构建工具支持构建的分支。 Unsupported Branches: 官方维护的构建工具不支持构建的分支。注意：官方文档中的部分 Legac">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SDK 系列 -- CEF -- 构建流程(Current Branches &amp; Legacy Branches)">
 <meta property="og:url" content="https://jalencui.com/2024/02/26/CEF-Build/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、背景桌面端开发中，会有使用到 Webview 的场景。当有视频播放需求时，需要本地构建带有自定义开关的 CEF。由于版权限制，CEF官方提供的库文件并不支持该动能。如果桌面客户端使用的时 Qt, Qt WebEngine 也是不支持的哦。相较于 QWebEngine，我们通常会选择灵活性更大的 CEF。截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF">
+<meta property="og:description" content="一、背景由于版权限制，CEF官方提供的库文件并不支持视频解码功能。截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF 的所有版本号，博主通常有两种划分方式： 方式一： Supported Branches: 官方维护的构建工具支持构建的分支。 Unsupported Branches: 官方维护的构建工具不支持构建的分支。注意：官方文档中的部分 Legac">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-02-26T13:53:00.000Z">
-<meta property="article:modified_time" content="2025-10-11T03:39:05.660Z">
+<meta property="article:modified_time" content="2025-10-11T15:56:52.335Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          966 words
+          854 words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          9 mins
+          8 mins
         
       </span>
     
@@ -273,7 +273,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>桌面端开发中，会有使用到 Webview 的场景。当有视频播放需求时，需要本地构建带有自定义开关的 CEF。由于版权限制，CEF官方提供的库文件并不支持该动能。如果桌面客户端使用的时 Qt, Qt WebEngine 也是不支持的哦。相较于 QWebEngine，我们通常会选择灵活性更大的 CEF。<br>截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF 的所有版本号，博主通常有两种划分方式：</p>
+                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>由于版权限制，CEF官方提供的库文件并不支持视频解码功能。<br>截至 2024年2月26日，CEF 的最新 Release 大版本号是 122。对于 CEF 的所有版本号，博主通常有两种划分方式：</p>
 <h6 id="方式一："><a href="#方式一：" class="headerlink" title="方式一："></a>方式一：</h6><ul>
 <li>Supported Branches: 官方维护的构建工具支持构建的分支。</li>
 <li>Unsupported Branches: 官方维护的构建工具不支持构建的分支。注意：<a target="_blank" rel="noopener" href="https://bitbucket.org/chromiumembedded/cef/wiki/BranchesAndBuilding">官方文档</a>中的部分 Legacy Release Branches 也可直接完成构建哦。博主曾傻瓜式构建的最近大版本号是 117。</li>

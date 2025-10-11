@@ -16,15 +16,15 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 由下文的预备知识可知, 其中的每项都可以作为单独的专题展开讲解. 碍于全职工作, 近期不可能对所有的内容展开详尽讨论. 为避免遗忘这些宝贵的经验和方法, 才有了这篇文章. 预备知识GPU 流水线 顶点数据: 模型通常由三角面 (或四边面) 组成. 在 GPU 渲染流程中，三角面片的顶点数据则是顶点着色器的输入，包括：">
+    <meta name="description" content="前言本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 为避免遗忘这些宝贵的经验和方法, 才有了这篇纯技术文章. 预备知识GPU 流水线 顶点数据: 模型通常由三角面 (或四边面) 组成. 在 GPU 渲染流程中，三角面片的顶点数据则是顶点着色器的输入，包括：位置, 法线, 切线, N 个纹理坐标以及颜色 坐标系: 空间位置都是相对的.  日常技术沟通时，我们常说：A 坐">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[杂项] AR -- 前后景处理">
 <meta property="og:url" content="https://jalencui.com/2023/03/22/AR-FrontAndRearScene-Overview/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="前言本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 由下文的预备知识可知, 其中的每项都可以作为单独的专题展开讲解. 碍于全职工作, 近期不可能对所有的内容展开详尽讨论. 为避免遗忘这些宝贵的经验和方法, 才有了这篇文章. 预备知识GPU 流水线 顶点数据: 模型通常由三角面 (或四边面) 组成. 在 GPU 渲染流程中，三角面片的顶点数据则是顶点着色器的输入，包括：">
+<meta property="og:description" content="前言本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 为避免遗忘这些宝贵的经验和方法, 才有了这篇纯技术文章. 预备知识GPU 流水线 顶点数据: 模型通常由三角面 (或四边面) 组成. 在 GPU 渲染流程中，三角面片的顶点数据则是顶点着色器的输入，包括：位置, 法线, 切线, N 个纹理坐标以及颜色 坐标系: 空间位置都是相对的.  日常技术沟通时，我们常说：A 坐">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-21T17:33:12.000Z">
-<meta property="article:modified_time" content="2025-02-15T04:22:18.619Z">
+<meta property="article:modified_time" content="2025-10-11T16:13:41.565Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k words
+          3.9k words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          46 mins
+          33 mins
         
       </span>
     
@@ -273,7 +273,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 由下文的预备知识可知, 其中的每项都可以作为单独的专题展开讲解. 碍于全职工作, 近期不可能对所有的内容展开详尽讨论. 为避免遗忘这些宝贵的经验和方法, 才有了这篇文章.</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文着重梳理两年来博主在 AR 直播领域（渲染、推流、数据处理）的技术积累. 为避免遗忘这些宝贵的经验和方法, 才有了这篇纯技术文章.</p>
 <h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><h2 id="GPU-流水线"><a href="#GPU-流水线" class="headerlink" title="GPU 流水线"></a>GPU 流水线</h2><ul>
 <li>顶点数据: 模型通常由三角面 (或四边面) 组成. 在 GPU 渲染流程中，三角面片的顶点数据则是顶点着色器的输入，包括：位置, 法线, 切线, N 个纹理坐标以及颜色<ul>
 <li>坐标系: 空间位置都是相对的.<br>  日常技术沟通时，我们常说：A 坐标系在 B 坐标系下的表示; 点在某个坐标系下的表示;<ul>
@@ -376,34 +376,6 @@
 </ul>
 </li>
 </ul>
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>AR 呈现 (或者是 AR 直播) 本质上是多张纹理 (或者图片) 的叠加 (<code>Blend</code> 指令, <code>Blit</code> 函数, <code>lerp</code> 插值函数). 这些纹理可分为: 底图 (UYVY422), UI 层 (BGRA), 特效层1, 特效层2, 特效层3 等</p>
-<ul>
-<li><strong>最上层</strong> (UI 层): 常驻元素不随机位变化, 包括：2D UI, 2D 动画等</li>
-<li><strong>中间层</strong> (特效层): 各种类型的特效, 这里的特效层划分不是随意定的哦.  前文所述的恰到好处的 <strong>点缀</strong> 侧重在深度上的体现, 而不同类型的特效在深度上会受到不同类型的 <strong>遮挡</strong>. 按遮挡需求, 很容易对不同类型的特效进行划分. 就拿 <strong>某某</strong> 赛事直播来说, 可进行如下划分<ul>
-<li>UI 层: 是的, 就其呈现形式来讲, 有些 UI (依赖于相机视角, 所属物体的状态) 是要归类为特效</li>
-<li>移动拖尾效果: 根据实时位置, 对粒子进行持续移动即可形成连续的轨迹. 实现方式有：ParticleSystem, TrailRender</li>
-<li>粒子效果: 本质上是 2D 精灵, 借助于<a target="_blank" rel="noopener" href="https://assetstore.unity.com/packages/tools/particles-effects/spritetoparticles-69765">插件</a>将其转换为具有 3D 效果的粒子特效</li>
-</ul>
-</li>
-<li><strong>最底层</strong> (物理相机输出的底图): 物理相机无法避免会存在各种前述畸变.<ul>
-<li>对上述特效层添加畸变效果, 以使特效跟底图完全吻合 (此时存在畸变)</li>
-<li>对叠加后的畸变输出, 进行裁剪 (通常表现为四周存在黑边, 因此需要先裁剪后缩放至原始尺寸)</li>
-</ul>
-</li>
-</ul>
-<p>对于本文要介绍的前后景关, AR 呈现效果只是最后的表现. 而背后却需要硬件, 算法, 系统框架, 设计, 程序的支撑. 接下来将以 <strong>某某</strong> 直播为例, 简要概括前后景处理中涉及到的关键技术点 (注: 不涉及通用解决方案, 仅关注突破点)</p>
-<ul>
-<li>场地(官方场景): 针对场地, AR 要做的事情就是要进行场地对齐: 现实世界与虚拟世界的完全对齐. 然后, 对齐 (标定) 并不是本文的重点. 现在我们更关注如何提高虚拟世界的 <strong>精度</strong>.</li>
-<li>道具(官方设备): 道具没有场地的固定位置, 但相对于玩家来说, 道具会在很长一段时间内具有固定的位置 (参数). 这就是对道具的定义, 针对不同的应用场景完全可以换个名词. 现在我们就关注世界坐标系到屏幕图像的 <strong>映射</strong> 及相关处理.</li>
-<li>玩家(赛队机器人)：在 AR 直播领域, 玩家的深度处理相关比较复杂 (游戏的纯虚拟世界无法与其相提并论). 现在我们关注玩家与特效的前后景 <strong>互动</strong></li>
-</ul>
-<h1 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h1><p>本节开门见山, 直接针对简介中提出的三点作出相应的描述</p>
-<ul>
-<li><strong>场地精度</strong>: 由 <strong>预备知识</strong> 中对于 <strong>3D 模型</strong> 重点描述可知, <strong>模型拼接</strong> 可以相对提高对 AR 建模的精度</li>
-<li><strong>道具映射</strong>: 涉及到 <strong>预备知识</strong> 中的 <strong>3D 空间变换</strong> 和 <strong>相机内外参</strong> 【前面的长篇陈述, 没有一句话是多余的】</li>
-<li><strong>玩家互动</strong>: 涉及到玩家 <strong>Mask</strong> 不规则区域, 玩家的 <strong>3D 位置</strong></li>
-</ul>
-<h1 id="处理方法"><a href="#处理方法" class="headerlink" title="处理方法"></a>处理方法</h1><p>包括模型拼接，坐标映射，以及玩家互动。</p>
 <h2 id="模型拼接"><a href="#模型拼接" class="headerlink" title="模型拼接"></a>模型拼接</h2><p>有很多前置条件不在本文讲解范围，后续有机会再分享。</p>
 <ul>
 <li><strong>模型分割</strong> ：即对整体的设计模型, 按照施工人员的组装方式进行分割。 这部分工作由相应的设计人员来完成, 但需要我们提出几点技术要求：<ul>
@@ -473,21 +445,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="玩家互动"><a href="#玩家互动" class="headerlink" title="玩家互动:"></a>玩家互动:</h2><p>指真实世界中的 <em>玩家</em> 跟虚拟世界中特效的相互干涉。这里的互动涉及两个层面：屏幕投影，前后关系</p>
-<ul>
-<li><strong>不规则 Mask</strong> ：玩家不规则投影在相机可见范围的联通区。这些知识需要大量数据，来对模型训练已提供识别准确性。机器学习不在我的能力范围，故这里仅作简要介绍。<ul>
-<li>数据传输：可以将场地上所有玩家的联通区，以 alpha 通道的形式跟底图一起传递给引擎</li>
-<li>应用：根据不同玩家的联通区在 1080p 图片的位置，可以实时生成 中间层特效（UI 层）用于描述当前玩家的状态，如：血量，Buff, 等级等</li>
-</ul>
-</li>
-<li><strong>径向深度</strong> : 借助于 <strong>Mask</strong> 联通区，可以深度信息实时判断当前像素点与对应玩家的前后关系。若玩家深度大小当前特效像素点的深度，则保留特效；若玩家深度小于当前像素点深度，则特效被剔除（Clip）。</li>
-</ul>
-<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p>本文仅对 AR 直播中深度处理及相关技术作简要介绍，暂未涉及 Coding 相关的技术和性能要求。后续大致会对本文进行拆解，并增加以下专题：</p>
-<ul>
-<li>直播推流：硬件及方案选型，包括：BMD硬件采集卡，NDI 设备，本地局域网内传输方案等。 这里提及的推流追求最小延时和最少丢帧，不涉及通常所说的编解码工作。</li>
-<li>AR 前端渲染：以往经历使用的是 Unity 引擎。 为向行业内的解决方案靠拢，后续会使用 Unreal 实现所有的技术点【手头没有 1 行代码】</li>
-<li>AR 后端系统：后续会使用 Qt 再现最小直播系统：包括视频采集，数据对齐，NDI输出等功能【依赖天价设备和算法支撑，只能模拟最小系统】</li>
-</ul>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p>本文仅对 AR 直播中深度处理及相关技术作简要介绍，暂未涉及 Coding 相关的技术和性能要求。</p>
 
                 
               </div>

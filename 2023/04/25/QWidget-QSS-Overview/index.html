@@ -16,15 +16,15 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言经过博主近期一个月在 QML &amp; Quick 方面的预研，部门线上产品已经可以看到 QML 相关内容。现阶段，组内正在使用 QML 开发 IM 需求。组内技术栈转型是个很大挑战。所以，决定这么做是有前提的：  对于博主来说，常规业务开发涉及的 QWidget 相关技术已没有任何挑战性； 对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 8">
+    <meta name="description" content="前言QSS 实战经验总结。 预备知识QSS 就是 QWidget 会用到的样式表。只有 QWidget 会用到 QSS 。QML 是脚本语言啦，它依赖 Quick 提供的可视化组件。而 Item 系列的可视化组件是 JSEngine 负责渲染的。所以，QWidget 和 QuickItem 是属于两个完全不想干的领域（QObject 是唯一共性）。以博主对 QSS 的认识，其大致可分为：  CSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[杂项] QSS">
 <meta property="og:url" content="https://jalencui.com/2023/04/25/QWidget-QSS-Overview/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="前言经过博主近期一个月在 QML &amp; Quick 方面的预研，部门线上产品已经可以看到 QML 相关内容。现阶段，组内正在使用 QML 开发 IM 需求。组内技术栈转型是个很大挑战。所以，决定这么做是有前提的：  对于博主来说，常规业务开发涉及的 QWidget 相关技术已没有任何挑战性； 对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 8">
+<meta property="og:description" content="前言QSS 实战经验总结。 预备知识QSS 就是 QWidget 会用到的样式表。只有 QWidget 会用到 QSS 。QML 是脚本语言啦，它依赖 Quick 提供的可视化组件。而 Item 系列的可视化组件是 JSEngine 负责渲染的。所以，QWidget 和 QuickItem 是属于两个完全不想干的领域（QObject 是唯一共性）。以博主对 QSS 的认识，其大致可分为：  CSS">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-25T14:15:22.000Z">
-<meta property="article:modified_time" content="2024-09-15T16:40:30.283Z">
+<meta property="article:modified_time" content="2025-10-11T15:45:34.046Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k words
+          1.9k words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          18 mins
+          16 mins
         
       </span>
     
@@ -273,12 +273,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>经过博主近期一个月在 <code>QML &amp; Quick</code> 方面的预研，部门线上产品已经可以看到 <code>QML</code> 相关内容。现阶段，组内正在使用 <code>QML</code> 开发 IM 需求。<br>组内技术栈转型是个很大挑战。所以，决定这么做是有前提的：</p>
-<ul>
-<li>对于博主来说，常规业务开发涉及的 QWidget 相关技术已没有任何挑战性；</li>
-<li>对新技术的预研，有相当的成果：利用业余时间，博主使用 QML 把 QWidget 相关业务已实现 80%（低代码，且效果更好）。</li>
-<li>组内成员对 <code>QWidget</code> 掌握程度没那么高，比如：<strong>QSS</strong> 很容易被滥用。</li>
-</ul>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>QSS 实战经验总结。</p>
 <h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><p>QSS 就是 QWidget 会用到的样式表。只有 QWidget 会用到 QSS 。QML 是脚本语言啦，它依赖 Quick 提供的可视化组件。而 Item 系列的可视化组件是 JSEngine 负责渲染的。所以，QWidget 和 QuickItem 是属于两个完全不想干的领域（QObject 是唯一共性）。<br>以博主对 QSS 的认识，其大致可分为：</p>
 <ul>
 <li>CSS 部分: 仅限 2.0 版本。QSS 处于维护状态，应该永远支持不了 CSS3 了；</li>
@@ -402,9 +397,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/12/MultiThread-Pratice-1/" title="并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）">
+                      <a href="/2023/08/06/MultiThread-Pratice-4/" title="并发系列 -- 汇总（持续更新）">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">并发系列 -- 实践 -- 直播推流之帧率控制（1080p59.94, 1080p50）</span>
+                        <span class="hidden-mobile">并发系列 -- 汇总（持续更新）</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
