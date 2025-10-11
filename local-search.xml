@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>cUI 系列 -- 窗口绘制</title>
+    <link href="/2025/10/12/cUI-windowpaint/"/>
+    <url>/2025/10/12/cUI-windowpaint/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>任何 UI 框架的基础能力：显示一幅 “图”。<br>这幅 “图” 的可能来源：静态图片, 动画帧，解码后的视频帧，亦或是 OSR 模式下 CEF3 渲染进程输出的页面帧等。</p><h1 id="二、关键技术"><a href="#二、关键技术" class="headerlink" title="二、关键技术"></a>二、关键技术</h1><h2 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h2><p>这里给出可选项：</p><ul><li>WIC: 微软提供的图像编解码框架，支持 BMP, JPEG，PNG, GIF, TIFF, ICO 等；</li><li>Bitmap (C#): 基于 WIC。但是，仅支持解析 GIF 的第一帧。</li><li>stb：三方插件，不支持矢量图 svg。</li><li>skia: 三方插件，完美支持各式资源（位图, 矢量图，动画）。</li></ul><p>本示例程序，使用 Bitmap 和 skia 实现了所有图片格式的解码。为侧重于渲染，skia 解码部分已删减。</p><h2 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h2><p>这里给出可选项：</p><ul><li>GDI：底层API, 直接与硬件交互，更接近操作系统；</li><li>GDI+: GDI 的封装与扩展；</li><li>Direct2D: 同 opengl 和 vulkan, 充分利用 GPU 资源。考虑到兼容性，此部分会作为 cUI 框架的扩展功能。</li></ul><p>本示例程序沿用更底层的 GDI 工具。这里给出 GDI 常用接口：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">CreateCompatibleDC</span>() <span class="hljs-comment">// 创建内存设备上下文</span><br><br><span class="hljs-built_in">SelectObject</span>() <span class="hljs-comment">// 选择GDI对象（位图、画笔等）</span><br><br><span class="hljs-built_in">SetStretchBltMode</span>() <span class="hljs-comment">// 设置位图拉伸模式，即插值方式</span><br><br><span class="hljs-built_in">StretchBlt</span>() <span class="hljs-comment">// 位块传输（拉伸复制）</span><br><br><span class="hljs-built_in">DeleteDC</span>() <span class="hljs-comment">// 删除设备上下文</span><br></code></pre></td></tr></table></figure><h1 id="三、参考代码"><a href="#三、参考代码" class="headerlink" title="三、参考代码"></a>三、参考代码</h1><h2 id="基础实现"><a href="#基础实现" class="headerlink" title="基础实现"></a>基础实现</h2><ul><li>静态图片： 绘制功能；</li><li><del>动态图片： 绘制功能；基于 Timer 的按需刷新及缓存机制。</del></li></ul><h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。<br><a href="https://github.com/jalencui/cUI/tree/master/WindowPaint"><strong>点我获取示例程序</strong></a></p><h1 id="四、其他"><a href="#四、其他" class="headerlink" title="四、其他"></a>四、其他</h1><p>该系列后续示例程序，将会回归更简洁的开发语言 c&#x2F;c++。 期待下一篇：桌面通知~  </p>]]></content>
+    
+    
+    <categories>
+      
+      <category>cUI</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>cUI 系列 -- 任务栏托盘</title>
     <link href="/2025/10/11/cUI-tray/"/>
     <url>/2025/10/11/cUI-tray/</url>
