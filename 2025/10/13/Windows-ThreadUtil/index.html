@@ -16,21 +16,21 @@
   <meta name="author" content="Jalen Cui">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景任何 UI 框架的基础能力：显示一幅 “图”。这幅 “图” 的可能来源：静态图片, 动画帧，解码后的视频帧，亦或是 OSR 模式下 CEF3 渲染进程输出的页面帧等。 二、关键技术解码这里给出可选项：  WIC: 微软提供的图像编解码框架，支持 BMP, JPEG，PNG, GIF, TIFF, ICO 等； Bitmap (C#): 基于 WIC。但是，仅支持解析 GIF 的第一帧。 s">
+    <meta name="description" content="简介两个 part：宝藏（Windows），备忘（标准库）。 挖宝可提醒 IO 的产物123&#x2F;&#x2F; read fileReadFileEx(hFile, ..., APCCallback); &#x2F;&#x2F; 线程 A 发起异步请求, 并立即返回SleepEx(INFINITE, TRUE); &#x2F;&#x2F; APCCallback 会在线程 A 中处理 这就是 Windows 提供的异步 IO 操作之一，即： 可提醒">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cUI 系列 -- 窗口绘制">
-<meta property="og:url" content="https://jalencui.com/2025/10/12/cUI-windowpaint/index.html">
+<meta property="og:title" content="Windows 系列 -- 线程宝藏">
+<meta property="og:url" content="https://jalencui.com/2025/10/13/Windows-ThreadUtil/index.html">
 <meta property="og:site_name" content="Jalen&#39;s Blog">
-<meta property="og:description" content="一、背景任何 UI 框架的基础能力：显示一幅 “图”。这幅 “图” 的可能来源：静态图片, 动画帧，解码后的视频帧，亦或是 OSR 模式下 CEF3 渲染进程输出的页面帧等。 二、关键技术解码这里给出可选项：  WIC: 微软提供的图像编解码框架，支持 BMP, JPEG，PNG, GIF, TIFF, ICO 等； Bitmap (C#): 基于 WIC。但是，仅支持解析 GIF 的第一帧。 s">
+<meta property="og:description" content="简介两个 part：宝藏（Windows），备忘（标准库）。 挖宝可提醒 IO 的产物123&#x2F;&#x2F; read fileReadFileEx(hFile, ..., APCCallback); &#x2F;&#x2F; 线程 A 发起异步请求, 并立即返回SleepEx(INFINITE, TRUE); &#x2F;&#x2F; APCCallback 会在线程 A 中处理 这就是 Windows 提供的异步 IO 操作之一，即： 可提醒">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-10-12T02:18:00.000Z">
-<meta property="article:modified_time" content="2025-10-11T15:21:01.768Z">
+<meta property="article:published_time" content="2025-10-12T16:44:00.000Z">
+<meta property="article:modified_time" content="2025-10-12T12:48:13.039Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>cUI 系列 -- 窗口绘制 - Jalen&#39;s Blog</title>
+  <title>Windows 系列 -- 线程宝藏 - Jalen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="cUI 系列 -- 窗口绘制"></span>
+            <span id="subtitle" data-typed-text="Windows 系列 -- 线程宝藏"></span>
           
         </div>
 
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-10-12 10:18" pubdate>
-          October 12, 2025 am
+        <time datetime="2025-10-13 00:44" pubdate>
+          October 13, 2025 am
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          697 words
+          2.6k words
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          6 mins
+          22 mins
         
       </span>
     
@@ -268,35 +268,42 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">cUI 系列 -- 窗口绘制</h1>
+            <h1 style="display: none">Windows 系列 -- 线程宝藏</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>任何 UI 框架的基础能力：显示一幅 “图”。<br>这幅 “图” 的可能来源：静态图片, 动画帧，解码后的视频帧，亦或是 OSR 模式下 CEF3 渲染进程输出的页面帧等。</p>
-<h1 id="二、关键技术"><a href="#二、关键技术" class="headerlink" title="二、关键技术"></a>二、关键技术</h1><h2 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h2><p>这里给出可选项：</p>
-<ul>
-<li>WIC: 微软提供的图像编解码框架，支持 BMP, JPEG，PNG, GIF, TIFF, ICO 等；</li>
-<li>Bitmap (C#): 基于 WIC。但是，仅支持解析 GIF 的第一帧。</li>
-<li>stb：三方插件，不支持矢量图 svg。</li>
-<li>skia: 三方插件，完美支持各式资源（位图, 矢量图，动画）。</li>
-</ul>
-<p>本示例程序，使用 Bitmap 和 skia 实现了所有图片格式的解码。为侧重于渲染，skia 解码部分已删减。</p>
-<h2 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h2><p>这里给出可选项：</p>
-<ul>
-<li>GDI：底层API, 直接与硬件交互，更接近操作系统；</li>
-<li>GDI+: GDI 的封装与扩展；</li>
-<li>Direct2D: 同 opengl 和 vulkan, 充分利用 GPU 资源。考虑到兼容性，此部分会作为 cUI 框架的扩展功能。</li>
-</ul>
-<p>本示例程序沿用更底层的 GDI 工具。这里给出 GDI 常用接口：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">CreateCompatibleDC</span>() <span class="hljs-comment">// 创建内存设备上下文</span><br><br><span class="hljs-built_in">SelectObject</span>() <span class="hljs-comment">// 选择GDI对象（位图、画笔等）</span><br><br><span class="hljs-built_in">SetStretchBltMode</span>() <span class="hljs-comment">// 设置位图拉伸模式，即插值方式</span><br><br><span class="hljs-built_in">StretchBlt</span>() <span class="hljs-comment">// 位块传输（拉伸复制）</span><br><br><span class="hljs-built_in">DeleteDC</span>() <span class="hljs-comment">// 删除设备上下文</span><br></code></pre></td></tr></table></figure>
+                <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>两个 part：宝藏（Windows），备忘（标准库）。</p>
+<h1 id="挖宝"><a href="#挖宝" class="headerlink" title="挖宝"></a>挖宝</h1><h2 id="可提醒-IO-的产物"><a href="#可提醒-IO-的产物" class="headerlink" title="可提醒 IO 的产物"></a>可提醒 IO 的产物</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// read file</span><br><span class="hljs-built_in">ReadFileEx</span>(hFile, ..., APCCallback); <span class="hljs-comment">// 线程 A 发起异步请求, 并立即返回</span><br><span class="hljs-built_in">SleepEx</span>(INFINITE, TRUE); <span class="hljs-comment">// APCCallback 会在线程 A 中处理</span><br></code></pre></td></tr></table></figure>
+<p>这就是 Windows 提供的异步 IO 操作之一，即： <strong>可提醒 IO</strong> 。当然，更优雅的 IOCP 不在本文讨论范围。</p>
+</hr>
 
-<h1 id="三、参考代码"><a href="#三、参考代码" class="headerlink" title="三、参考代码"></a>三、参考代码</h1><h2 id="基础实现"><a href="#基础实现" class="headerlink" title="基础实现"></a>基础实现</h2><ul>
-<li>静态图片： 绘制功能；</li>
-<li><del>动态图片： 绘制功能；基于 Timer 的按需刷新及缓存机制。</del></li>
+<p>问题来了，ReadFileEx 是如何做到异步回调的呢？答案：QueueUserAPC。</p>
+</hr>
+
+<ul>
+<li>QueueUserAPC 怎么用?<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">auto</span> g_running = <span class="hljs-literal">true</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">ShutdownThread</span><span class="hljs-params">()</span></span>; <span class="hljs-comment">// g_running = false;</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">WorkerThread</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">while</span>(g_running)&#123; <span class="hljs-built_in">SleepEx</span>(INFINITE, TRUE); &#125;<br>&#125;<br><br><span class="hljs-comment">// 通知线程终止</span><br><span class="hljs-built_in">QueueUserAPC</span>(ShutdownThread, hWorkerThread, (ULONG_PTR)Params);<br></code></pre></td></tr></table></figure>
+是否有很多问号？自行 deepseek, 心领神会后才能感受到它的强大：高效，简洁，安全。</li>
 </ul>
-<h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。<br><a target="_blank" rel="noopener" href="https://github.com/jalencui/cUI/tree/master/WindowPaint"><strong>点我获取示例程序</strong></a></p>
-<h1 id="四、其他"><a href="#四、其他" class="headerlink" title="四、其他"></a>四、其他</h1><p>该系列后续示例程序，将会回归更简洁的开发语言 c&#x2F;c++。 期待下一篇：桌面通知~  </p>
+<h2 id="Windows-线程池"><a href="#Windows-线程池" class="headerlink" title="Windows 线程池"></a><strong>Windows 线程池</strong></h2><p>根据不同用途，有多类线程池对象：I&#x2F;O，等待，定时器，工作项等多种场景。</p>
+<ul>
+<li><strong>I&#x2F;O 线程池</strong> ：踩一脚<br>有价值的应用场景：文件批处理，并主动等待操作完成。大多数情况下，有更优的解决方案：可提醒 IO，IOCP等。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">CreateFile</span>();<br><span class="hljs-built_in">CreateThreadpoolIo</span>();<br><span class="hljs-comment">// 批处理对：开始xN</span><br><span class="hljs-built_in">StartThreadpoolIo</span>(); <br><span class="hljs-built_in">WriteFile</span>(); <br><span class="hljs-comment">// 批处理对：结束xN</span><br><span class="hljs-built_in">Sleep</span>(); <span class="hljs-comment">// 必须阻塞式等待文件操作完成</span><br><span class="hljs-built_in">CLoseHanle</span>();<br></code></pre></td></tr></table></figure></li>
+<li><strong>等待线程池</strong> ：点个赞<br>比较轻便的工具，即：在未来某个时刻触发回调（超时或主动触发）。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">CreateEvent</span>();<br><span class="hljs-built_in">CreateThreadpoolWait</span>();<br><span class="hljs-built_in">SetThreadpoolWait</span>();<br>... <br><span class="hljs-built_in">SetEvent</span>(); <span class="hljs-comment">//未来某个时刻，主动触发等待回调</span><br></code></pre></td></tr></table></figure></li>
+<li><strong>定时器线程池</strong> : 点个赞<br>比较轻便的工具，即：异步执行周期性任务。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">CreateThreadpoolTimer</span>();<br><span class="hljs-built_in">SetThreadpoolTimer</span>(); <span class="hljs-comment">// 开始 timer 监控</span><br>...<br><span class="hljs-built_in">SetThreadpoolTimer</span>(timer, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>); <span class="hljs-comment">// 停止 timer 监控</span><br><span class="hljs-built_in">WaitForThreadpoolTimerCallbacks</span>(timer, TRUE); <span class="hljs-comment">// 等待执行中任务完成，并取消待执行的任务</span><br><span class="hljs-built_in">CloseThreadpoolTimer</span>(timer);<br></code></pre></td></tr></table></figure></li>
+<li><strong>工作项线程池</strong> ： 点赞<br>最常用，最实用，且支持定制：线程池容量，线程优先级。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 简单场景: 默认线程池，默认优先级</span><br><span class="hljs-built_in">CreateThreadpoolWork</span>(); <span class="hljs-comment">// pool</span><br><span class="hljs-built_in">SubmitThreadpoolWork</span>();<br>...<br><span class="hljs-built_in">WaitForThreadpoolWorkCallbacks</span>(); <span class="hljs-comment">// 等待完成或取消</span><br><span class="hljs-built_in">CloseThreadpoolWork</span>(); <span class="hljs-comment">// 清理工作项</span><br><br><span class="hljs-comment">// 复杂场景：定制线程池</span><br><span class="hljs-built_in">SetThreadpoolCallbackPriority</span>()； <span class="hljs-comment">// 设置优先级</span><br><span class="hljs-built_in">SetThreadpoolThreadMaximum</span>(); <span class="hljs-comment">// 指定线程池容量上限</span><br><span class="hljs-built_in">SetThreadpoolThreadMinimum</span>(); <span class="hljs-comment">// 指定线程池容量下限</span><br><span class="hljs-built_in">SetThreadpoolCallbackPool</span>()；<span class="hljs-comment">// 指定线程池</span><br></code></pre></td></tr></table></figure>
+线程池优先级，常用的有：THREAD_PRIORITY_IDLE(-15)，THREAD_PRIORITY_NORMAL(0) 等。</li>
+</ul>
+<h1 id="备忘录"><a href="#备忘录" class="headerlink" title="备忘录"></a>备忘录</h1><p>标准库提供的一些基础能力，适用于常规的业务开发。简单列一下：</p>
+<ul>
+<li><p>std::async: 高易用，低控制</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 1、wrapper</span><br><span class="hljs-keyword">auto</span> result = std::<span class="hljs-built_in">async</span>(func, placeholder_1, ...); <span class="hljs-comment">// -&gt; std::future&lt;&gt;</span><br><br><span class="hljs-comment">// 2、block until</span><br><span class="hljs-keyword">auto</span> value = result.<span class="hljs-built_in">get</span>();<br></code></pre></td></tr></table></figure></li>
+<li><p>std::packaged_task: 中等易用，可控制线程与执行时机。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 1、wrapper a callable object</span><br><span class="hljs-function">std::packaged_task&lt;<span class="hljs-title">int</span><span class="hljs-params">()</span>&gt; <span class="hljs-title">task</span><span class="hljs-params">(std::launch::deferred, func)</span></span>; <span class="hljs-comment">// int func()&#123;&#125;</span><br><br><span class="hljs-comment">// 2、get the future</span><br><span class="hljs-keyword">auto</span> result = task.<span class="hljs-built_in">get_future</span>(); <span class="hljs-comment">// -&gt; std::future&lt;&gt;</span><br><br><span class="hljs-comment">// 3、move to one specific thread</span><br><span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">(std::move(task))</span></span>;<br><br><span class="hljs-comment">// 4、lazy</span><br><span class="hljs-keyword">auto</span> value = result.<span class="hljs-built_in">get</span>(); <span class="hljs-comment">// block until ...</span><br>std::cout &lt;&lt; <span class="hljs-string">&quot;the result value is: &quot;</span> &lt;&lt; value &lt;&lt; std::endl;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>std::promise: 较低易用，更高控制权</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 1、promise-future pair</span><br>std::promise&lt;<span class="hljs-type">int</span>&gt; promise;<br><span class="hljs-keyword">auto</span> future = promise.<span class="hljs-built_in">get_future</span>();<br><br><span class="hljs-comment">// 2、move promise to the threaded func</span><br><span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">(func, std::move(promise))</span></span>;<br><br><span class="hljs-keyword">try</span>&#123;<br>    <span class="hljs-comment">// 3、block util</span><br>    <span class="hljs-keyword">auto</span> value = future.<span class="hljs-built_in">get</span>();<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;the result value is: &quot;</span> &lt;&lt; value &lt;&lt; std::endl;<br>&#125; <span class="hljs-built_in">catch</span>(std::exception&amp; e)&#123;<br>    <span class="hljs-comment">// do something</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>从日常“琐碎的业务”来看，不怎么好用喽：非响应式，需要阻塞。如果能够动态监听 std::future 的状态，那就很棒了，比如：<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qfuturewatcher.html">QFutureWatcher</a>。</p>
 
                 
               </div>
@@ -315,7 +322,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/cUI/" class="category-chain-item">cUI</a>
+  <a href="/categories/Windows/" class="category-chain-item">Windows</a>
   
   
 
@@ -335,8 +342,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>cUI 系列 -- 窗口绘制</div>
-      <div>https://jalencui.com/2025/10/12/cUI-windowpaint/</div>
+      <div>Windows 系列 -- 线程宝藏</div>
+      <div>https://jalencui.com/2025/10/13/Windows-ThreadUtil/</div>
     </div>
     <div class="license-meta">
       
@@ -348,7 +355,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>October 12, 2025</div>
+          <div>October 13, 2025</div>
         </div>
       
       
@@ -380,18 +387,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/10/13/Windows-ThreadUtil/" title="Windows 系列 -- 线程宝藏">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Windows 系列 -- 线程宝藏</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/10/11/cUI-tray/" title="cUI 系列 -- 任务栏托盘">
-                        <span class="hidden-mobile">cUI 系列 -- 任务栏托盘</span>
+                      <a href="/2025/10/12/cUI-windowpaint/" title="cUI 系列 -- 窗口绘制">
+                        <span class="hidden-mobile">cUI 系列 -- 窗口绘制</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
