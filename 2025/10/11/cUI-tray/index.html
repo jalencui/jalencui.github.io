@@ -24,7 +24,7 @@
 <meta property="og:description" content="一、应用场景常规的桌面端后台应用程序：没有通俗意义上的 UI 线程。此时，它需要一个任务栏图标。 二、客户端构成鉴于系列首篇，额外插入该环节。  物理载体：窗口，比如：windows 中的 win32 窗口。 逻辑载体：“UI 线程” 和它的消息队列，用于维护或者共享当前的输入状态，比如：键盘状态，焦点窗口。 消息循环：用于处理属于 “UI 线程” 的所有消息。  三、问答鉴于系列首篇，额外插入该">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-10-11T08:01:00.000Z">
-<meta property="article:modified_time" content="2025-10-11T03:34:01.791Z">
+<meta property="article:modified_time" content="2025-12-27T06:08:30.714Z">
 <meta property="article:author" content="Jalen Cui">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          641 words
+          601 words
         
       </span>
     
@@ -292,7 +292,7 @@
 <li>托盘图标：指定的父窗口可接收任务栏图标的交互事件。特定事件构成：自定义的托盘消息 &amp; lParam 参数。</li>
 <li>右键菜单：指定的父窗口可接收右键菜单的交互事件。特定事件构成：WM_COMMAND 消息 &amp; 自定义参数。</li>
 </ul>
-<h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。此 C# 代码也可以无缝转为 C&#x2F;C++ (无需 P&#x2F;Invoke, 更简单).<br><a target="_blank" rel="noopener" href="https://github.com/jalencui/cUI/tree/master/SystemTray"><strong>点我获取示例程序</strong></a></p>
+<h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>该示例仅包含通用的 win32 接口和标准 thread 接口调用。Demo 见微软官方文档~</p>
 
                 
               </div>
